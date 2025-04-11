@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:estacionaqui/app/db/collections_ref.dart';
 import 'package:estacionaqui/app/db/db.dart';
-import 'package:estacionaqui/app/models/user_model.dart';
+import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 
 class AppUserRepository extends DB {
@@ -22,6 +22,16 @@ class AppUserRepository extends DB {
   Future<bool> create(AppUser appUser) async {
     try {
       await CollectionsRef.appUser.doc(appUser.uid).set(appUser);
+      return true;
+    } catch (e) {
+      Logger.info(e);
+      return false;
+    }
+  }
+
+  Future<bool> updateOnly(String uid, Map<String, dynamic> changes) async {
+    try {
+      await CollectionsRef.appUser.doc(uid).update(changes);
       return true;
     } catch (e) {
       Logger.info(e);

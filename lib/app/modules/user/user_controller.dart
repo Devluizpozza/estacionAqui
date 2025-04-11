@@ -1,4 +1,4 @@
-import 'package:estacionaqui/app/models/user_model.dart';
+import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/services/auth_manager.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
