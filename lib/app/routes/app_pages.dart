@@ -7,17 +7,18 @@ import 'package:estacionaqui/app/modules/map/google_map_view.dart';
 import 'package:estacionaqui/app/modules/user_profile/user_profile_bindings.dart';
 import 'package:estacionaqui/app/modules/user_profile/user_profile_view.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
+import 'package:estacionaqui/app/services/verification_code_view.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 abstract class AppPages {
   static final List<GetPage> pages = [
     GetPage(
-      name: AppRoutes.login,
+      name: AppRoutes.initial,
       page: () => LoginView(),
       binding: LoginBinginds(),
     ),
     GetPage(
-      name: AppRoutes.initial,
+      name: AppRoutes.login,
       page: () => HomeView(),
       binding: HomeBindings(),
     ),
@@ -31,5 +32,6 @@ abstract class AppPages {
       page: () => UserProfileView(),
       binding: UserProfileBindings(),
     ),
+    GetPage(name: AppRoutes.verify, page: () => VerifyCodeView()),
   ];
 }

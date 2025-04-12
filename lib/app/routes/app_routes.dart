@@ -3,4 +3,5 @@ abstract class AppRoutes {
   static const String map = '/map';
   static const String userProfile = '/userProfile';
   static const String login = '/login';
+  static const String verify = '/verify';
 }
