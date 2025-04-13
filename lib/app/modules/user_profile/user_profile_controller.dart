@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:estacionaqui/app/db/collections.dart';
-import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
@@ -63,7 +61,6 @@ class UserProfileController extends GetxController {
   void loadUserDataBase(AppUser usuario) {
     user = usuario;
     nameController.text = usuario.name;
-    placaController.text = usuario.placa;
     contatoController.text = usuario.contato;
     emailController.text = usuario.email;
     imageUrl = usuario.imageUrl;
@@ -86,7 +83,6 @@ class UserProfileController extends GetxController {
         user = AppUser(
           uid: appUser.uid,
           name: appUser.name,
-          placa: appUser.placa,
           contato: appUser.contato,
           email: appUser.email,
           imageUrl: appUser.imageUrl,
@@ -98,24 +94,6 @@ class UserProfileController extends GetxController {
     } catch (e) {
       Logger.info(e.toString());
       isLoading = false;
-    }
-  }
-
-  Future<void> createUser() async {
-    try {
-      AppUser userToSave = AppUser(
-        uid: DB.generateUID(Collections.app_user),
-        name: 'usuario${DB.generateId()}',
-        placa: DB.generateId(),
-        contato: DB.generateId(),
-        email: '${DB.generateId()}@gmail.com',
-      );
-      bool success = await appUserRepository.create(userToSave);
-      if (success) {
-        SnackBarHandler.snackBarSuccess('Usuário criado com sucesso!');
-      }
-    } catch (e) {
-      Logger.info(e.toString());
     }
   }
 
