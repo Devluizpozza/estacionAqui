@@ -5,6 +5,16 @@ sync_with_github:
   stage: sync_with_github
   only:
     - develop
+  image: alpine:latest
+  before_script:
+    # Instala o Git (a imagem alpine é enxuta e precisa disso)
+    - apk add --no-cache git
   script:
+    # Configura o remote do GitHub com token de acesso
     - git remote add github https://$GITHUB_TOKEN@github.com/Devluizpozza/estacionAqui.git
-    - git push github develop
+
+    # Cria a branch develop a partir do HEAD atual (merge aceito)
+    - git checkout -b develop
+
+    # Faz o push da branch develop local para a develop no GitHub
+    - git push github develop --force
