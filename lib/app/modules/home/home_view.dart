@@ -51,7 +51,7 @@ class HomeView extends GetView<HomeController> {
                 backgroundColor: AppColors.lightBlue,
                 child: Icon(Icons.person, color: Colors.white),
               ),
-              onTap: () => Get.toNamed(AppRoutes.userProfile),
+              onTap: () => Get.toNamed(AppRoutes.user_profile),
             ),
           ),
         ],

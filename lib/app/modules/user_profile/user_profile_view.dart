@@ -33,7 +33,6 @@ class UserProfileView extends GetView<UserProfileController> {
                                 onPressed: () async {
                                   final user = controller.user;
                                   controller.nameController.text = user.name;
-                                  controller.placaController.text = user.placa;
                                   controller.contatoController.text =
                                       user.contato;
                                   controller.emailController.text = user.email;
@@ -110,12 +109,6 @@ class UserProfileView extends GetView<UserProfileController> {
                           "Name",
                           controller.user.name,
                           controller.nameController,
-                          controller.isEditing,
-                        ),
-                        _buildField(
-                          "Placa",
-                          controller.user.placa,
-                          controller.placaController,
                           controller.isEditing,
                         ),
                         _buildField(
