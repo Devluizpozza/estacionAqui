@@ -1,6 +1,7 @@
 import 'package:estacionaqui/app/components/loading_widget.dart';
 import 'package:estacionaqui/app/modules/user_profile/user_profile_controller.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
+import 'package:estacionaqui/app/utils/regex.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,8 +34,14 @@ class UserProfileView extends GetView<UserProfileController> {
                                 onPressed: () async {
                                   final user = controller.user;
                                   controller.nameController.text = user.name;
-                                  controller.contatoController.text =
-                                      user.contato;
+                                  controller
+                                      .contatoController
+                                      .text = Regex.only_digits(
+                                    user.contato.replaceAll(
+                                      RegExp(r'^\+55'),
+                                      '',
+                                    ),
+                                  );
                                   controller.emailController.text = user.email;
                                   controller.isEditing = true;
                                   // await controller.createUser();
@@ -115,7 +122,7 @@ class UserProfileView extends GetView<UserProfileController> {
                           "Contato",
                           controller.user.contato,
                           controller.contatoController,
-                          controller.isEditing,
+                          false,
                         ),
                         _buildField(
                           "Email",

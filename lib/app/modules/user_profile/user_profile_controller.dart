@@ -6,6 +6,7 @@ import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/services/image_picker.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
+import 'package:estacionaqui/app/utils/regex.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,7 +63,9 @@ class UserProfileController extends GetxController {
 
   void loadUserDataBase() {
     nameController.text = user.name;
-    contatoController.text = user.contato;
+    contatoController.text = Regex.only_digits(
+      user.contato.replaceAll(RegExp(r'^\+55'), ''),
+    );
     emailController.text = user.email;
     imageUrl = user.imageUrl;
   }
@@ -110,6 +113,7 @@ class UserProfileController extends GetxController {
           "email": emailController.text,
         });
         isLoading = false;
+        loadUserDataBase();
       }
       isLoading = false;
     } catch (e) {
