@@ -1,16 +1,45 @@
-# estacionaqui
+# 💻 Estacionaq
 
-A new Flutter project.
+## ✨ Sobre o Projeto
 
-## Getting Started
+Projeto visando gerenciamento e informação sobre estacinamentos na regiao desejada, construido com flutter e com o firestore firebase, também como projeto ao protfólio mas principalmente, futura start u
 
-This project is a starting point for a Flutter application.
+## 👨‍💻 Sobre Mim
 
-A few resources to get you started if this is your first Flutter project:
+Tenho experiência em **desenvolvimento mobile**, trabalhando com Flutter e Firebase Firestore. Além disso, possuo conhecimento em **ReactJS** para desenvolvimento web. Estou sempre buscando me aprimorar e aprender novas tecnologias. Gostaria muito de agregar valor à empresa na qual eu venha a atuar.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ⚡ Desafios do Projeto
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+O maior desafio deste projeto foi utilizar métodos de fluxo e login, mantendo sessao e authenticação do usuário ativaou nao. No entanto, com o acesso a diversos meios de aprendizado, como **blogs, fóruns e inteligência artificial**, a adaptação foi fluida e enriquecedora.
+
+## ✨ Tecnologias Utilizadas
+
+- Flutter
+- Dart
+- Firebase Firestore
+- GetX
+- Outros pacotes essenciais do ecossistema Flutter
+
+## 🛠️ Como Clonar e Executar o Projeto
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://gitlab.com/luizpozza.2019/estacion_aqui
+   ```
+2. **Acesse o diretório do projeto:**
+   ```bash
+   cd pasta-clonada
+   ```
+3. **Instale as dependências:**
+   ```bash
+   flutter pub get
+   ```
+4. **Execute o projeto:**
+   ```bash
+   flutter run
+   ```
+
+> ⚠ Certifique-se de ter o **Flutter** e um emulador ou dispositivo físico configurado.
+
+
+
