@@ -8,7 +8,7 @@ class AppWidget extends StatelessWidget {
   final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
   AppWidget({super.key}) {
-    // Get.put<RouteObserver<PageRoute>>(routeObserver);
+    Get.put<RouteObserver<PageRoute>>(routeObserver);
   }
 
   @override

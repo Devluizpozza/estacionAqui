@@ -1,5 +1,6 @@
 import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
+import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
@@ -50,6 +51,7 @@ class RegisterUserController extends GetxController {
       );
       bool success = await appUserRepository.create(userToSave);
       if (success) {
+        UserController.instance.fetch(userToSave.uid);
         SnackBarHandler.snackBarSuccess('Usuário criado com sucesso!');
         Get.toNamed(AppRoutes.verify);
       }

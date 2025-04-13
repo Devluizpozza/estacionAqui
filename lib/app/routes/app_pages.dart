@@ -17,12 +17,12 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 abstract class AppPages {
   static final List<GetPage> pages = [
     GetPage(
-      name: AppRoutes.initial,
+      name: AppRoutes.login,
       page: () => LoginView(),
       binding: LoginBinginds(),
     ),
     GetPage(
-      name: AppRoutes.login,
+      name: AppRoutes.home,
       page: () => HomeView(),
       binding: HomeBindings(),
     ),
@@ -46,6 +46,6 @@ abstract class AppPages {
       page: () => ConfirmSmsCodeView(),
       binding: ConfirmSmsCodeBindings(),
     ),
-    GetPage(name: AppRoutes.verify, page: () => AuthStateWidget()),
+    GetPage(name: AppRoutes.initial, page: () => AuthStateWidget()),
   ];
 }

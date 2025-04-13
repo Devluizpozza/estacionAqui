@@ -1,5 +1,6 @@
 import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
+import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
@@ -13,6 +14,14 @@ class AuthManager extends GetxController {
   static AuthManager get instance => Get.find<AuthManager>();
   Rxn<User> firebaseUser = Rxn<User>();
   final AppUserRepository appUserRepository = AppUserRepository();
+  final RxBool _isManualLogin = false.obs;
+
+  bool get isManualLogin => _isManualLogin.value;
+
+  set isManualLogin(bool value) {
+    _isManualLogin.value = value;
+    _isManualLogin.refresh();
+  }
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
 
@@ -33,11 +42,22 @@ class AuthManager extends GetxController {
     await _auth.signOut();
   }
 
-  void handleAuthChanged(User? user) {
+  void handleAuthChanged(User? user) async {
+    if (isManualLogin) {
+      Logger.info("handleAuthChanged → Ignorado, login manual em andamento.");
+      return;
+    }
+
     if (user == null) {
+      Logger.info("handleAuthChanged → Usuário deslogado.");
+      UserController.instance.clear();
       Get.offAllNamed('/login');
     } else {
-      Get.offAllNamed('/home');
+      Logger.info("handleAuthChanged → Usuário logado. Buscando dados...");
+      await UserController.instance.fetch(user.uid);
+      if (user.uid.isNotEmpty) {
+        Get.offAllNamed('/home');
+      }
     }
   }
 
@@ -50,6 +70,7 @@ class AuthManager extends GetxController {
             credential,
           );
           User? user = userCredential.user;
+
           if (user != null) {
             AppUser remoteUser = await appUserRepository.fetch(user.uid);
             if (remoteUser.name.isEmpty) {
@@ -169,6 +190,8 @@ class AuthManager extends GetxController {
     }
 
     try {
+      isManualLogin = true;
+
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: smsCode,

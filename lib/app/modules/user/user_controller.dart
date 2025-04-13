@@ -2,35 +2,41 @@ import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/services/auth_manager.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 
 class UserController extends GetxController {
-  late Rx<AppUser>? _user;
+  final Rx<AppUser?> _user = Rx<AppUser?>(null);
+  final AppUserRepository appUserRepository = AppUserRepository();
 
-  AppUser get user => _user!.value;
+  static UserController get instance => Get.find<UserController>();
 
-  set user(AppUser value) {
-    try {
-      _user = Rx<AppUser>(value);
-      _user!.refresh();
-    } catch (e) {
-      Logger.info(e);
-    }
+  AppUser? get user => _user.value;
+
+  set user(AppUser? value) {
+    _user.value = value;
+    _user.refresh();
   }
 
-  Future<AppUser?> fetch() async {
+  Future<AppUser?> fetch(String uid) async {
     try {
-      String uid = AuthManager.instance.currentUser!.uid;
       AppUserRepository appUserRepository = AppUserRepository();
       AppUser? remoteUser = await appUserRepository.fetch(uid);
 
+      if (remoteUser.name.isEmpty) {
+        Logger.info("Usuário não encontrado ou sem dados. Forçando logout.");
+        await AuthManager.instance.signOut();
+        return null;
+      }
+
       user = remoteUser;
-      _user!.refresh();
       return remoteUser;
     } catch (e) {
       Logger.info(e);
       return Future.error(e.toString());
     }
+  }
+
+  void clear() {
+    user = null;
   }
 }

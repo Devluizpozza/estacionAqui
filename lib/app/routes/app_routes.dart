@@ -1,5 +1,6 @@
 abstract class AppRoutes {
   static const String initial = '/';
+  static const String home = '/';
   static const String register_user = '/registerUser';
   static const String map = '/map';
   static const String user_profile = '/userProfile';

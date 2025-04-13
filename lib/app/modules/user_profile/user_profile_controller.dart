@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
+import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/services/image_picker.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
@@ -55,15 +56,15 @@ class UserProfileController extends GetxController {
   @override
   void onInit() async {
     await fetchAppUserData();
+    loadUserDataBase();
     super.onInit();
   }
 
-  void loadUserDataBase(AppUser usuario) {
-    user = usuario;
-    nameController.text = usuario.name;
-    contatoController.text = usuario.contato;
-    emailController.text = usuario.email;
-    imageUrl = usuario.imageUrl;
+  void loadUserDataBase() {
+    nameController.text = user.name;
+    contatoController.text = user.contato;
+    emailController.text = user.email;
+    imageUrl = user.imageUrl;
   }
 
   @override
@@ -78,7 +79,9 @@ class UserProfileController extends GetxController {
   Future<void> fetchAppUserData() async {
     try {
       isLoading = true;
-      AppUser appUser = await appUserRepository.fetch('IWjo0bv49TAoNvIaBtQS');
+      AppUser appUser = await appUserRepository.fetch(
+        UserController.instance.user!.uid,
+      );
       if (appUser.uid.isNotEmpty) {
         user = AppUser(
           uid: appUser.uid,
@@ -87,7 +90,7 @@ class UserProfileController extends GetxController {
           email: appUser.email,
           imageUrl: appUser.imageUrl,
         );
-        loadUserDataBase(user);
+        loadUserDataBase();
         isLoading = false;
       }
       isLoading = false;
