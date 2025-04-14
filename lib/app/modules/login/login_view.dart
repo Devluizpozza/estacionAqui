@@ -56,7 +56,7 @@ class LoginView extends GetView<LoginController> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: controller.verifyPhoneNumber,
+                    onPressed: controller.registerWithPhoneNumber,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(

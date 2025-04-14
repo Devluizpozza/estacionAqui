@@ -2,6 +2,7 @@ import 'package:estacionaqui/app/components/location_card.dart';
 import 'package:estacionaqui/app/components/quick_action_card.dart';
 import 'package:estacionaqui/app/modules/home/home_controller.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
+import 'package:estacionaqui/app/services/auth_manager.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class HomeView extends GetView<HomeController> {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const [
+          children: [
             DrawerHeader(
               decoration: BoxDecoration(color: Color(0xFF4FC3F7)),
               child: Text(
@@ -30,7 +31,11 @@ class HomeView extends GetView<HomeController> {
               title: Text('Configurações'),
             ),
             ListTile(leading: Icon(Icons.help), title: Text('Ajuda')),
-            ListTile(leading: Icon(Icons.logout), title: Text('Sair')),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Sair'),
+              onTap: () => AuthManager.instance.signOut(),
+            ),
           ],
         ),
       ),
