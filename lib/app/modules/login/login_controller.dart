@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   final Rx<String> _phoneNumber = ''.obs;
   final Rx<String> _smsCode = ''.obs;
-  final AppUserRepository userRepository = AppUserRepository();
+  final AppUserRepository appUserRepository = AppUserRepository();
 
   // final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -25,7 +25,7 @@ class LoginController extends GetxController {
     _smsCode.refresh();
   }
 
-  void verifyPhoneNumber() {
+  void registerWithPhoneNumber() async {
     AuthManager.instance.verifyPhoneNumber("+55$phoneNumber");
   }
 

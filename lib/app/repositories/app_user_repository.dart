@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/collections_ref.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
@@ -53,6 +54,28 @@ class AppUserRepository extends DB {
     } catch (e) {
       Logger.info(e);
       return false;
+    }
+  }
+
+  Future<AppUser?> fetchByPhoneNumber(String phoneNumber) async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await firestore
+              .collection(Collections.app_user)
+              .where('contato', isEqualTo: phoneNumber)
+              .limit(1)
+              .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
+        final uid = querySnapshot.docs.first.id;
+        return AppUser.fromMap(data).copyWith({"uid": uid});
+      } else {
+        return null;
+      }
+    } catch (e) {
+      Logger.info(e);
+      return Future.error("Erro ao buscar usuário: $e");
     }
   }
 }

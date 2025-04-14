@@ -39,6 +39,16 @@ class AppUser extends Equatable {
     return const AppUser(uid: '', name: '', contato: '', email: '');
   }
 
+  factory AppUser.fromMap(Map<String, dynamic> map) {
+    return AppUser(
+      uid: map['uid'] ?? '',
+      name: map['name'] ?? '',
+      contato: map['contato'] ?? '',
+      email: map['email'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+    );
+  }
+
   AppUser copyWith(Map<String, dynamic> newer) {
     Map<String, dynamic> current = toJson();
     Map<String, dynamic> merged = {...current, ...newer};
