@@ -23,8 +23,7 @@ O maior desafio deste projeto foi utilizar métodos de fluxo e login, mantendo s
 ## 🛠️ Como Clonar e Executar o Projeto
 
 1. **Clone o repositório:**
-   ```bash
-   git clone https://gitlab.com/luizpozza.2019/estacion_aqui
+
    ```
 2. **Acesse o diretório do projeto:**
    ```bash
