@@ -27,4 +27,18 @@ abstract class SnackBarHandler {
       duration: Duration(seconds: 2),
     );
   }
+
+  static void snackBarSuccessLogin(String userName) {
+    Get.snackbar(
+      "Bem-vindo de volta!",
+      "Ótimo te ver novamente, $userName!",
+      backgroundColor: Colors.green.shade600,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 3),
+      margin: const EdgeInsets.all(10),
+      borderRadius: 10,
+      icon: const Icon(Icons.check_circle, color: Colors.white),
+    );
+  }
 }

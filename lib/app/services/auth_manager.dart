@@ -40,6 +40,7 @@ class AuthManager extends GetxController {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    Get.toNamed(AppRoutes.home);
   }
 
   void handleAuthChanged(User? user) async {
@@ -188,7 +189,6 @@ class AuthManager extends GetxController {
       SnackBarHandler.snackBarError("Por favor, insira o código.");
       return;
     }
-
     try {
       isManualLogin = true;
 
@@ -212,7 +212,9 @@ class AuthManager extends GetxController {
             arguments: {'userUID': user.uid, 'phoneNumber': phoneNumber},
           );
         } else {
+          UserController.instance.user = remoteUser;
           Get.toNamed(AppRoutes.initial, arguments: user.uid);
+          SnackBarHandler.snackBarSuccessLogin(remoteUser.name);
         }
       }
     } catch (e) {
