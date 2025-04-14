@@ -1,16 +1,14 @@
 stages:
-  - sync_with_github
+  - push github
 
-sync_with_github:
-  stage: sync_with_github
+push github:
+  stage: push github
   only:
     - develop
   image: alpine:latest
   before_script:
     - apk add --no-cache git
   script:
-    # Adiciona o remote do GitHub com o token usando oauth2
-    - git remote add github https://oauth2:$GITHUB_TOKEN@github.com/Devluizpozza/estacionAqui.git
+  
+    - git push github develop
 
-    # Faz push da branch atual (que já é develop) para o GitHub
-    - git push github HEAD:develop --force
