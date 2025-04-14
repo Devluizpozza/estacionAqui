@@ -1,111 +1,223 @@
+import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
+import 'package:estacionaqui/app/models/app_user_model.dart';
+import 'package:estacionaqui/app/modules/user/user_controller.dart';
+import 'package:estacionaqui/app/repositories/app_user_repository.dart';
+import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthManager extends GetxController {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   static AuthManager get instance => Get.find<AuthManager>();
+  Rxn<User> firebaseUser = Rxn<User>();
+  final AppUserRepository appUserRepository = AppUserRepository();
+  final RxBool _isManualLogin = false.obs;
 
-  @override
-  void onReady() {
-    try {
-      listenIdTokenChanges();
-    } catch (e) {
-      Logger.info(e);
-    }
-    super.onReady();
-  }
+  bool get isManualLogin => _isManualLogin.value;
 
-  void listenIdTokenChanges() async {
-    FirebaseAuth.instance.idTokenChanges().listen((user) async {
-      FirebaseAuth.instance.currentUser != null && user != null;
-    });
+  set isManualLogin(bool value) {
+    _isManualLogin.value = value;
+    _isManualLogin.refresh();
   }
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
 
-  bool get shouldSignUp =>
-      (currentUser!.displayName != null &&
-          currentUser!.displayName!.isNotEmpty) ||
-      (currentUser!.phoneNumber != null &&
-          currentUser!.phoneNumber!.isNotEmpty);
+  @override
+  void onInit() {
+    firebaseUser.bindStream(_auth.authStateChanges());
+    ever(firebaseUser, handleAuthChanged);
+    super.onInit();
+  }
 
-  // Future<bool> signInWithGooglePlayGames() async {
-  //   try {
-  //     final bool authenticated = await signInWithFirebase();
-  //     await Future(() => FirebaseAuth.instance.authStateChanges());
-  //     return authenticated;
-  //   } catch (e) {
-  //     Logger.info(e);
-  //     return false;
-  //   }
-  // }
+  bool get isLoggedIn => firebaseUser.value != null;
 
-  // Future<bool> signInWithFirebase({dynamic arguments}) async {
-  //   try {
-  //     final bool authenticated = await AppMethodChannel.firebasePlatform
-  //         .invokeMethod(AppMethodChannel.firebaseSignIn, arguments);
-  //     return authenticated;
-  //   } catch (e) {
-  //     Logger.info(e);
-  //     return false;
-  //   }
-  // }
+  String? get userUID => firebaseUser.value?.uid;
 
-  // Future<bool> signInWithFirebaseByPlatform() async {
-  //   try {
-  //     if (Platform.isAndroid) {
-  //       return signInWithGooglePlayGames();
-  //     }
-  //     return signInWithFirebase();
-  //   } catch (e) {
-  //     Logger.info(e);
-  //     return false;
-  //   }
-  // }
+  static AuthManager get to => Get.find<AuthManager>();
 
-  // Future<void> signIn({
-  //   required Future<void> Function(User?) onComplete,
-  //   required void Function() onError,
-  // }) async {
-  //   try {
-  //     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-  //       bool authenticated = false;
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 
-  //       if (!Consts.is_development) {
-  //         bool isSignedIn = await GameAuth.isSignedIn;
+  void handleAuthChanged(User? user) async {
+    if (isManualLogin) {
+      Logger.info("handleAuthChanged → Ignorado, login manual em andamento.");
+      return;
+    }
 
-  //         if (!isSignedIn ||
-  //             currentUser == null ||
-  //             DateTime.now()
-  //                     .difference(currentUser!.metadata.lastSignInTime!)
-  //                     .inHours >=
-  //                 6) {
-  //           if (!isSignedIn) {
-  //             playJoinSound();
-  //             authenticated = await signInWithPlatformGames();
-  //           } else {
-  //             authenticated = await signInWithFirebaseByPlatform();
-  //           }
-  //           if (authenticated) {
-  //             await onComplete(user);
-  //           } else {
-  //             onComplete(null);
-  //           }
-  //         } else {
-  //           onComplete(currentUser);
-  //         }
-  //       } else {
-  //         if (user == null) {
-  //           await showDevSignIn(onComplete: onComplete, onError: onError);
-  //         } else {
-  //           onComplete(user);
-  //         }
-  //       }
-  //     });
-  //   } catch (e) {
-  //     // playErrorSound();
-  //     onError();
-  //     Logger.info(e);
-  //   }
-  // }
+    if (user == null) {
+      Logger.info("handleAuthChanged → Usuário deslogado.");
+      UserController.instance.clear();
+      Get.offAllNamed('/login');
+    } else {
+      Logger.info("handleAuthChanged → Usuário logado. Buscando dados...");
+      await UserController.instance.fetch(user.uid);
+      if (user.uid.isNotEmpty) {
+        Get.offAllNamed('/home');
+      }
+    }
+  }
+
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          UserCredential userCredential = await _auth.signInWithCredential(
+            credential,
+          );
+          User? user = userCredential.user;
+
+          if (user != null) {
+            AppUser remoteUser = await appUserRepository.fetch(user.uid);
+            if (remoteUser.name.isEmpty) {
+              Get.toNamed(
+                AppRoutes.register_user,
+                arguments: [
+                  {userUID: user.uid, phoneNumber: phoneNumber},
+                ],
+              );
+            } else {
+              Get.toNamed(AppRoutes.initial, arguments: userUID);
+            }
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          if (e.code == 'invalid-phone-number') {
+            SnackBarHandler.snackBarError("Número de telefone inválido!");
+          } else {
+            SnackBarHandler.snackBarError(e.code);
+          }
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          _showCodeInputBottomSheet(verificationId, phoneNumber);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          print(verificationId);
+        },
+      );
+    } catch (e) {
+      Logger.info(e.toString());
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth!.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await _auth.signInWithCredential(credential);
+      }
+    } catch (e) {
+      Logger.info(e.toString());
+    }
+  }
+
+  Future<void> verifyCode(String verificationId, String smsCode) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      SnackBarHandler.snackBarError('Erro, Falha ao verificar código');
+    }
+  }
+
+  void _showCodeInputBottomSheet(String verificationId, String phoneNumber) {
+    final TextEditingController codeController = TextEditingController();
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Digite o código SMS",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: codeController,
+              decoration: InputDecoration(
+                labelText: "Código",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _confirmCode(
+                  codeController.text.trim(),
+                  verificationId,
+                  phoneNumber,
+                );
+              },
+              child: Text("Confirmar"),
+            ),
+          ],
+        ),
+      ),
+      isDismissible: false,
+      enableDrag: false,
+    );
+  }
+
+  Future<void> _confirmCode(
+    String smsCode,
+    String verificationId,
+    String phoneNumber,
+  ) async {
+    if (smsCode.isEmpty) {
+      SnackBarHandler.snackBarError("Por favor, insira o código.");
+      return;
+    }
+
+    try {
+      isManualLogin = true;
+
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      User? user = userCredential.user;
+
+      if (user != null && user.uid.isNotEmpty) {
+        AppUser remoteUser = await appUserRepository.fetch(user.uid);
+
+        if (remoteUser.name.isEmpty) {
+          Get.back();
+          Get.toNamed(
+            AppRoutes.register_user,
+            arguments: {'userUID': user.uid, 'phoneNumber': phoneNumber},
+          );
+        } else {
+          Get.toNamed(AppRoutes.initial, arguments: user.uid);
+        }
+      }
+    } catch (e) {
+      SnackBarHandler.snackBarError("Erro ao confirmar o código.");
+      Logger.info(e.toString());
+    }
+  }
 }

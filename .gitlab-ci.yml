@@ -1,0 +1,14 @@
+stages:
+  - push github
+
+push github:
+  stage: push github
+  only:
+    - develop
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache git
+  script:
+  
+    - git push github develop
+

@@ -2,6 +2,7 @@ import 'package:estacionaqui/app/utils/fomatter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+
 import 'login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -55,7 +56,7 @@ class LoginView extends GetView<LoginController> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: controller.sendSms,
+                    onPressed: controller.verifyPhoneNumber,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -76,7 +77,7 @@ class LoginView extends GetView<LoginController> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () => controller.signInWithGoogle,
+                  onTap: () => controller.signInWithGoogle(),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,

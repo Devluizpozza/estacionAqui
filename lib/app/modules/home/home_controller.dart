@@ -9,7 +9,10 @@ class HomeController extends GetxController
 
   @override
   void onInit() {
-    super.onInit();
+    final Map<String, dynamic> data = Get.arguments;
+    if (data.isNotEmpty) {
+      // userUID = data['userUID'];
+    }
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -32,6 +35,7 @@ class HomeController extends GetxController
     });
 
     animationController.forward();
+    super.onInit();
   }
 
   void navigateTo(String route) async {
