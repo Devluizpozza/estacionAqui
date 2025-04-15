@@ -11,9 +11,11 @@ class RegisterUserController extends GetxController {
   final AppUserRepository appUserRepository = AppUserRepository();
   late String userUID;
   late String phoneNumber;
+  late String email;
   final nameController = TextEditingController();
-  final placaController = TextEditingController();
   final emailController = TextEditingController();
+  final contatoController = TextEditingController();
+
   final RxBool _isEditing = false.obs;
   final RxBool _isLoading = false.obs;
 
@@ -33,10 +35,13 @@ class RegisterUserController extends GetxController {
 
   @override
   void onInit() {
-    final Map<String, dynamic> data = Get.arguments;
-    if (data.isNotEmpty) {
-      userUID = data['userUID'];
-      phoneNumber = data['phoneNumber'] ?? '';
+    final Map<String, dynamic>? arguments = Get.arguments;
+    if (arguments != null) {
+      userUID = arguments['userUID'];
+      phoneNumber = arguments['phoneNumber'] ?? '';
+      email = arguments['email'] ?? '';
+      contatoController.text = phoneNumber;
+      emailController.text = email;
     }
     super.onInit();
   }
@@ -46,7 +51,7 @@ class RegisterUserController extends GetxController {
       AppUser userToSave = AppUser(
         uid: userUID,
         name: nameController.text,
-        contato: phoneNumber,
+        contato: '+55${contatoController.text}',
         email: emailController.text,
       );
       bool success = await appUserRepository.create(userToSave);

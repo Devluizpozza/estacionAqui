@@ -15,12 +15,20 @@ class AuthManager extends GetxController {
   Rxn<User> firebaseUser = Rxn<User>();
   final AppUserRepository appUserRepository = AppUserRepository();
   final RxBool _isManualLogin = false.obs;
+  final Rx<String> _phoneNumber = ''.obs;
 
   bool get isManualLogin => _isManualLogin.value;
 
   set isManualLogin(bool value) {
     _isManualLogin.value = value;
     _isManualLogin.refresh();
+  }
+
+  String get phoneNumber => _phoneNumber.value;
+
+  set phoneNumber(String value) {
+    _phoneNumber.value = value;
+    _phoneNumber.refresh();
   }
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -62,7 +70,8 @@ class AuthManager extends GetxController {
     }
   }
 
-  Future<void> verifyPhoneNumber(String phoneNumber) async {
+  Future<void> verifyPhoneNumber(String phoneNumberParam) async {
+    phoneNumber = phoneNumberParam;
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -77,9 +86,7 @@ class AuthManager extends GetxController {
             if (remoteUser.name.isEmpty) {
               Get.toNamed(
                 AppRoutes.register_user,
-                arguments: [
-                  {userUID: user.uid, phoneNumber: phoneNumber},
-                ],
+                arguments: {userUID: user.uid, phoneNumber: phoneNumber},
               );
             } else {
               Get.toNamed(AppRoutes.initial, arguments: userUID);
@@ -107,18 +114,51 @@ class AuthManager extends GetxController {
 
   Future<void> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      isManualLogin = true;
 
-      if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        SnackBarHandler.snackBarError(
+          'Login cancelado! Você não selecionou nenhuma conta.',
+        );
+        return;
+      }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      if (googleAuth.accessToken != null && googleAuth.idToken != null) {
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth!.accessToken,
+          accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        await _auth.signInWithCredential(credential);
+        UserCredential userCredential = await _auth.signInWithCredential(
+          credential,
+        );
+        User? user = userCredential.user;
+        if (user != null && user.uid.isNotEmpty) {
+          AppUser remoteUser = await appUserRepository.fetch(user.uid);
+          String? email = user.email;
+
+          if (remoteUser.name.isEmpty) {
+            Get.toNamed(
+              AppRoutes.register_user,
+              arguments: {
+                'userUID': user.uid,
+                'email': email,
+                "phoneNumber": '',
+              },
+            );
+          } else {
+            UserController.instance.user = remoteUser;
+            Get.toNamed(AppRoutes.initial, arguments: user.uid);
+            SnackBarHandler.snackBarSuccessLogin(remoteUser.name);
+          }
+        }
       }
+      SnackBarHandler.snackBarSuccess('Login com Google realizado!');
+      isManualLogin = false;
     } catch (e) {
+      isManualLogin = false;
       Logger.info(e.toString());
     }
   }
@@ -217,8 +257,10 @@ class AuthManager extends GetxController {
           SnackBarHandler.snackBarSuccessLogin(remoteUser.name);
         }
       }
+      isManualLogin = false;
     } catch (e) {
       SnackBarHandler.snackBarError("Erro ao confirmar o código.");
+      isManualLogin = false;
       Logger.info(e.toString());
     }
   }
