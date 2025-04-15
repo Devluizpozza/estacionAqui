@@ -25,6 +25,11 @@ class RegisterUserView extends GetView<RegisterUserController> {
               controller.emailController,
               !controller.isEditing,
             ),
+               _buildField(
+              "Contato",
+              controller.contatoController,
+              !controller.isEditing,
+            ),
           ],
         ),
       ),

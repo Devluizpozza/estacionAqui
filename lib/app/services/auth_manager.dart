@@ -108,16 +108,45 @@ class AuthManager extends GetxController {
   Future<void> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
 
-      if (googleAuth?.accessToken != null && googleAuth?.idToken != null) {
+      if (googleUser == null) {
+        SnackBarHandler.snackBarError(
+          'Login cancelado! Você não selecionou nenhuma conta.',
+        );
+        return;
+      }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      if (googleAuth.accessToken != null && googleAuth.idToken != null) {
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth!.accessToken,
+          accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        await _auth.signInWithCredential(credential);
+        UserCredential userCredential = await _auth.signInWithCredential(
+          credential,
+        );
+        User? user = userCredential.user;
+        if (user != null && user.uid.isNotEmpty) {
+          AppUser remoteUser = await appUserRepository.fetch(user.uid);
+          String? email = user.email;
+
+          if (remoteUser.name.isEmpty) {
+            Get.toNamed(
+              AppRoutes.register_user,
+              arguments: {
+                'userUID': user.uid,
+                'email': email,
+                "phoneNumber": '',
+              },
+            );
+          } else {
+            UserController.instance.user = remoteUser;
+            Get.toNamed(AppRoutes.initial, arguments: user.uid);
+            SnackBarHandler.snackBarSuccessLogin(remoteUser.name);
+          }
+        }
       }
+      SnackBarHandler.snackBarSuccess('Login com Google realizado!');
     } catch (e) {
       Logger.info(e.toString());
     }
