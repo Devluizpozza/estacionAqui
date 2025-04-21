@@ -3,6 +3,7 @@ import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
+import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -179,10 +180,11 @@ class AuthManager extends GetxController {
     final TextEditingController codeController = TextEditingController();
 
     Get.bottomSheet(
+      backgroundColor: AppColors.lightGrey,
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.lightGrey,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -197,7 +199,9 @@ class AuthManager extends GetxController {
               controller: codeController,
               decoration: InputDecoration(
                 labelText: "Código",
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -210,6 +214,9 @@ class AuthManager extends GetxController {
                   phoneNumber,
                 );
               },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(AppColors.lightBlue),
+              ),
               child: Text("Confirmar"),
             ),
           ],
