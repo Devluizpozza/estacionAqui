@@ -114,19 +114,16 @@ class UserProfileView extends GetView<UserProfileController> {
                         const SizedBox(height: 20),
                         _buildField(
                           "Name",
-                          controller.user.name,
                           controller.nameController,
                           controller.isEditing,
                         ),
                         _buildField(
                           "Contato",
-                          controller.user.contato,
                           controller.contatoController,
                           false,
                         ),
                         _buildField(
                           "Email",
-                          controller.user.email,
                           controller.emailController,
                           controller.isEditing,
                         ),
@@ -155,7 +152,6 @@ class UserProfileView extends GetView<UserProfileController> {
 
 Widget _buildField(
   String label,
-  String value,
   TextEditingController controller,
   bool editing,
 ) {
