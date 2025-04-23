@@ -51,7 +51,7 @@ class RegisterUserController extends GetxController {
       AppUser userToSave = AppUser(
         uid: userUID,
         name: nameController.text,
-        contato: '+55${contatoController.text}',
+        contato: contatoController.text,
         email: emailController.text,
       );
       bool success = await appUserRepository.create(userToSave);
