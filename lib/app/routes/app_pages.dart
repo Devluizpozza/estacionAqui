@@ -6,6 +6,9 @@ import 'package:estacionaqui/app/modules/login/register_user_bindings.dart';
 import 'package:estacionaqui/app/modules/login/register_user_view.dart';
 import 'package:estacionaqui/app/modules/map/google_map_bindings.dart';
 import 'package:estacionaqui/app/modules/map/google_map_view.dart';
+import 'package:estacionaqui/app/modules/parking/parking_owner_list_bindings.dart';
+import 'package:estacionaqui/app/modules/parking/parking_owner_list_view.dart';
+import 'package:estacionaqui/app/modules/parking/parking_owner_view.dart';
 import 'package:estacionaqui/app/modules/sms/confirm_sms_code_bindings.dart';
 import 'package:estacionaqui/app/modules/sms/confirm_sms_code_view.dart';
 import 'package:estacionaqui/app/modules/user_profile/user_profile_bindings.dart';
@@ -45,6 +48,16 @@ abstract class AppPages {
       name: AppRoutes.confirm_sms_code,
       page: () => ConfirmSmsCodeView(),
       binding: ConfirmSmsCodeBindings(),
+    ),
+    GetPage(
+      name: AppRoutes.parking_owner_list,
+      page: () => ParkingOwnerList(),
+      binding: ParkingOwnerBindings(),
+    ),
+    GetPage(
+      name: AppRoutes.parking_owner,
+      page: () => ParkingOwnerView(),
+      binding: ParkingOwnerBindings(),
     ),
     GetPage(name: AppRoutes.initial, page: () => AuthStateWidget()),
   ];

@@ -6,6 +6,7 @@ class AppUser extends Equatable {
   final String contato;
   final String email;
   final String imageUrl;
+  final DateTime createAt;
 
   const AppUser({
     required this.uid,
@@ -13,6 +14,7 @@ class AppUser extends Equatable {
     required this.contato,
     required this.email,
     this.imageUrl = '',
+    required this.createAt,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class AppUser extends Equatable {
       contato: json['contato'] ?? '',
       email: json['email'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
+      createAt: json['createAt'] ?? '',
     );
   }
 
@@ -32,11 +35,18 @@ class AppUser extends Equatable {
       'contato': contato,
       'email': email,
       'imageUrl': imageUrl,
+      'createAt': createAt,
     };
   }
 
   factory AppUser.empty() {
-    return const AppUser(uid: '', name: '', contato: '', email: '');
+    return AppUser(
+      uid: '',
+      name: '',
+      contato: '',
+      email: '',
+      createAt: DateTime.now(),
+    );
   }
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
@@ -46,6 +56,7 @@ class AppUser extends Equatable {
       contato: map['contato'] ?? '',
       email: map['email'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
+      createAt: map['createAte'] ?? '',
     );
   }
 
@@ -56,5 +67,5 @@ class AppUser extends Equatable {
   }
 
   @override
-  List<Object?> get props => [uid, name, contato, email, imageUrl];
+  List<Object?> get props => [uid, name, contato, email, imageUrl, createAt];
 }

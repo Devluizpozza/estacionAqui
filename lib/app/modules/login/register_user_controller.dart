@@ -53,6 +53,7 @@ class RegisterUserController extends GetxController {
         name: nameController.text,
         contato: contatoController.text,
         email: emailController.text,
+        createAt: DateTime.now(),
       );
       bool success = await appUserRepository.create(userToSave);
       if (success) {
