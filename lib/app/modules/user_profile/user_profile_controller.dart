@@ -91,6 +91,7 @@ class UserProfileController extends GetxController {
           contato: appUser.contato,
           email: appUser.email,
           imageUrl: appUser.imageUrl,
+          createAt: appUser.createAt,
         );
         loadUserDataBase();
         isLoading = false;

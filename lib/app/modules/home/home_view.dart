@@ -24,7 +24,11 @@ class HomeView extends GetView<HomeController> {
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
-            ListTile(leading: Icon(Icons.star), title: Text('Favoritos')),
+            ListTile(
+              leading: Icon(Icons.star),
+              title: Text('Favoritos'),
+              onTap: () => Get.toNamed(AppRoutes.parking_owner_list),
+            ),
             ListTile(leading: Icon(Icons.history), title: Text('Histórico')),
             ListTile(
               leading: Icon(Icons.settings),
