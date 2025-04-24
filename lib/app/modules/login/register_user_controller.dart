@@ -51,7 +51,10 @@ class RegisterUserController extends GetxController {
       AppUser userToSave = AppUser(
         uid: userUID,
         name: nameController.text,
-        contato: contatoController.text,
+        contato:
+            contatoController.text.startsWith('+55')
+                ? contatoController.text
+                : "+55${contatoController.text}",
         email: emailController.text,
         createAt: DateTime.now(),
       );
