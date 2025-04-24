@@ -25,8 +25,8 @@ class RegisterUserView extends GetView<RegisterUserController> {
               controller.emailController,
               !controller.isEditing,
             ),
-               _buildField(
-              "Contato",
+            _buildField(
+              "(00) 00000-0000",
               controller.contatoController,
               !controller.isEditing,
             ),
@@ -57,6 +57,7 @@ class RegisterUserView extends GetView<RegisterUserController> {
         enabled: editing,
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: TextStyle(color: Colors.blueGrey[200]),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: !editing,
           fillColor: editing ? Colors.white : Colors.grey.shade100,

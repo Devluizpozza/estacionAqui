@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class AppUser extends Equatable {
@@ -17,14 +18,14 @@ class AppUser extends Equatable {
     required this.createAt,
   });
 
-  factory AppUser.fromJson(Map<String, dynamic> json) {
+  factory AppUser.fromJson(Map<String, dynamic> map) {
     return AppUser(
-      uid: json['uid'] ?? '',
-      name: json['name'] ?? '',
-      contato: json['contato'] ?? '',
-      email: json['email'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
-      createAt: json['createAt'] ?? '',
+      uid: map['uid'] ?? '',
+      name: map['name'] ?? '',
+      contato: map['contato'] ?? '',
+      email: map['email'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+      createAt: (map['createAt'] as Timestamp).toDate(),
     );
   }
 
