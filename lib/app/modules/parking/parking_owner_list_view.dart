@@ -83,8 +83,7 @@ class ParkingOwnerList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Aqui você pode chamar uma rota para adicionar novo estacionamento
-          // Ex: Get.toNamed(AppRoutes.addParking);
+          Get.toNamed(AppRoutes.parking_add);
         },
         backgroundColor: AppColors.lightBlue,
         child: const Icon(Icons.add, color: Colors.white),

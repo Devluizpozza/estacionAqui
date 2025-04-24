@@ -1,4 +1,4 @@
-import 'package:estacionaqui/app/models/geo_fire_point.dart';
+import 'package:estacionaqui/app/models/geo_fire_point_model.dart';
 
 abstract class GeolocationPlacePoint {
   static GeoFirePoint floripaGeoFirePoint = GeoFirePoint(
