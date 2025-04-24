@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:equatable/equatable.dart';
-import 'package:estacionaqui/app/models/geo_fire_point.dart';
+import 'package:estacionaqui/app/models/geo_fire_point_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GeolocationPoint extends GeoFirePoint with EquatableMixin {

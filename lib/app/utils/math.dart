@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:estacionaqui/app/models/geo_fire_point.dart';
+import 'package:estacionaqui/app/models/geo_fire_point_model.dart';
 
 class MathUtils {
   static const base32Codes = '0123456789bcdefghjkmnpqrstuvwxyz';
