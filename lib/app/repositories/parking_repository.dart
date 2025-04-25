@@ -42,4 +42,14 @@ class ParkingRepository extends DB {
       return false;
     }
   }
+
+  Future<bool> delete(String uid) async {
+    try {
+      await CollectionsRef.parking.doc(uid).delete();
+      return true;
+    } catch (e) {
+      Logger.info(e);
+      return false;
+    }
+  }
 }

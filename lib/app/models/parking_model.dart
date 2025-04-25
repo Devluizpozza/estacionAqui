@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:estacionaqui/app/models/place_model.dart';
+import 'package:estacionaqui/app/models/place_short_model.dart';
 
 class Parking extends Equatable {
   final String uid;
@@ -10,7 +11,7 @@ class Parking extends Equatable {
   final String phone;
   final int slots;
   final List<String> conforts;
-  final Place? place;
+  final PlaceShort place;
   final DateTime createAt;
 
   const Parking({
@@ -20,7 +21,7 @@ class Parking extends Equatable {
     required this.phone,
     required this.slots,
     required this.conforts,
-    this.place,
+    required this.place,
     required this.createAt,
   });
 
@@ -58,7 +59,7 @@ class Parking extends Equatable {
       'phone': phone,
       'slots': slots,
       'conforts': conforts,
-      'place': place,
+      'place': place.toJson(),
       'createAt': createAt,
     };
   }
@@ -71,7 +72,7 @@ class Parking extends Equatable {
       phone: '',
       slots: 10,
       conforts: [],
-      place: Place.empty(),
+      place: PlaceShort.empty(),
       createAt: DateTime.now(),
     );
   }

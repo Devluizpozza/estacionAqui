@@ -57,6 +57,28 @@ class PlaceShort extends Place {
     };
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'placeId': placeId,
+      'fullAddress': fullAddress,
+      'city': city,
+      'fu': fu,
+      'countryCode': countryCode,
+      'geolocationPoint': geolocationPoint.toMap(),
+    };
+  }
+
+  factory PlaceShort.fromMap(Map<String, dynamic> map) {
+    return PlaceShort(
+      placeId: map['placeId'],
+      fullAddress: map['fullAddress'],
+      city: map['city'],
+      fu: map['fu'],
+      countryCode: map['countryCode'],
+      geolocationPoint: GeolocationPoint.fromMap(map['geolocationPoint']),
+    );
+  }
+
   @override
   PlaceShort copyWith(Map<String, dynamic> newer) {
     Map<String, dynamic> current = toJson();

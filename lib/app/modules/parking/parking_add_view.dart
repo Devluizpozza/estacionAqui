@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ParkingAddView extends GetView<ParkingAddController> {
-  ParkingAddView({super.key});
-  final TextEditingController _controller = TextEditingController();
+  const ParkingAddView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +15,10 @@ class ParkingAddView extends GetView<ParkingAddController> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            _buildField("Name", _controller, false),
-            _buildField("Email", _controller, false),
-            _buildField("(00) 00000-0000", _controller, false),
+            _buildField("DisplayName", controller.displayNameController),
+            _buildField("Description", controller.descriptionController),
+            _buildField("(00) 00000-0000", controller.phoneController),
+            _buildField("Slots", controller.slotsController),
           ],
         ),
       ),
@@ -34,22 +34,17 @@ class ParkingAddView extends GetView<ParkingAddController> {
     );
   }
 
-  Widget _buildField(
-    String label,
-    TextEditingController controller,
-    bool editing,
-  ) {
+  Widget _buildField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextField(
         controller: controller,
-        enabled: editing,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.blueGrey[200]),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: !editing,
-          fillColor: editing ? Colors.white : Colors.grey.shade100,
+          filled: true,
+          fillColor: Colors.white,
         ),
       ),
     );
