@@ -1,11 +1,13 @@
 // ignore_for_file: must_be_immutable
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/models/place_model.dart';
 import 'package:estacionaqui/app/models/place_short_model.dart';
 
 class Parking extends Equatable {
   final String uid;
+  final AppUser owner;
   final String displayName;
   final String description;
   final String phone;
@@ -16,6 +18,7 @@ class Parking extends Equatable {
 
   const Parking({
     required this.uid,
+    required this.owner,
     required this.displayName,
     required this.description,
     required this.phone,
@@ -28,6 +31,7 @@ class Parking extends Equatable {
   factory Parking.fromJson(Map<String, dynamic> map) {
     return Parking(
       uid: map["uid"] ?? '',
+      owner: map['owner'] ?? AppUser.empty(),
       displayName: map['displayName'] ?? '',
       description: map['description'] ?? '',
       phone: map['phone'] ?? '',
@@ -41,6 +45,7 @@ class Parking extends Equatable {
   factory Parking.fromRealtimeJson(Map<String, dynamic> map) {
     return Parking(
       uid: map["uid"] ?? '',
+      owner: map['owner'] ?? AppUser.empty(),
       displayName: map['displayName'] ?? '',
       description: map['description'] ?? '',
       phone: map['phone'] ?? '',
@@ -51,9 +56,10 @@ class Parking extends Equatable {
     );
   }
 
-  Map<String, dynamic> toJson({bool fromLocalGeolocationPoint = false}) {
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
+      'owner': owner.toJson(),
       'displayName': displayName,
       'description': description,
       'phone': phone,
@@ -67,6 +73,7 @@ class Parking extends Equatable {
   factory Parking.empty() {
     return Parking(
       uid: '',
+      owner: AppUser.empty(),
       displayName: '',
       description: '',
       phone: '',
@@ -86,6 +93,7 @@ class Parking extends Equatable {
   @override
   List<Object?> get props => [
     uid,
+    owner,
     displayName,
     description,
     phone,
