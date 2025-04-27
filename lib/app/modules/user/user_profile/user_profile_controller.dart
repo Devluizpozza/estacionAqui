@@ -5,6 +5,7 @@ import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/services/image_picker.dart';
+import 'package:estacionaqui/app/utils/fomatter.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,16 +56,16 @@ class UserProfileController extends GetxController {
 
   @override
   void onInit() async {
-    await fetchAppUserData();
-    loadUserDataBase();
+    await fetchUser();
+    populateTextFields();
     super.onInit();
   }
 
-  void loadUserDataBase() {
-    final String phoneNumber = user.contato.replaceAll(RegExp(r'^\+55'), '');
-
+  void populateTextFields() {
     nameController.text = user.name;
-    contatoController.text = phoneNumber;
+    contatoController.text = Formatter.formatPhone(
+      user.contato.replaceAll("+55", ""),
+    );
     emailController.text = user.email;
     imageUrl = user.imageUrl;
   }
@@ -78,7 +79,7 @@ class UserProfileController extends GetxController {
     super.onClose();
   }
 
-  Future<void> fetchAppUserData() async {
+  Future<void> fetchUser() async {
     try {
       isLoading = true;
       AppUser appUser = await appUserRepository.fetch(
@@ -93,7 +94,7 @@ class UserProfileController extends GetxController {
           imageUrl: appUser.imageUrl,
           createAt: appUser.createAt,
         );
-        loadUserDataBase();
+        populateTextFields();
         isLoading = false;
       }
       isLoading = false;
@@ -113,7 +114,7 @@ class UserProfileController extends GetxController {
           "email": emailController.text,
         });
         isLoading = false;
-        loadUserDataBase();
+        fetchUser();
       }
       isLoading = false;
     } catch (e) {
