@@ -64,6 +64,8 @@ class ParkingAddController extends GetxController {
         place: place,
         conforts: comforts,
         slots: slot,
+        carValue: 0,
+        motoValue: 0,
         createAt: DateTime.now(),
       );
       bool success = await parkingRepository.create(parkingToSave);

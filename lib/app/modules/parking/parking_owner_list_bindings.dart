@@ -4,6 +4,6 @@ import 'package:get/get.dart';
 class ParkingOwnerBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ParkingOwnerController>(() => ParkingOwnerController());
+    Get.lazyPut<ParkingOwnerListController>(() => ParkingOwnerListController());
   }
 }

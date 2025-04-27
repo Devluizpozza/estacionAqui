@@ -1,5 +1,3 @@
-import 'package:estacionaqui/app/services/auth_manager.dart';
-import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ParkingOwnerView extends StatelessWidget {
@@ -8,38 +6,8 @@ class ParkingOwnerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: AppColors.lightBlue),
-              child: Text(
-                'nome do estacionamento',
-                style: const TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-            const ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text('Estatísticas'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.list_alt),
-              title: Text('Reservas Atuais'),
-            ),
-            const ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Configurações'),
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sair'),
-              onTap: () => AuthManager.instance.signOut(),
-            ),
-          ],
-        ),
-      ),
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -95,6 +63,7 @@ class ParkingOwnerView extends StatelessWidget {
 
             Expanded(
               child: ListView(
+                
                 children: const [
                   ListTile(
                     leading: Icon(Icons.directions_car),
