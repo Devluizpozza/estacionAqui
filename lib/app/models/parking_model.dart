@@ -12,6 +12,9 @@ class Parking extends Equatable {
   final String description;
   final String phone;
   final int slots;
+  final double carValue;
+  final double motoValue;
+
   final List<String> conforts;
   final PlaceShort place;
   final DateTime createAt;
@@ -23,33 +26,48 @@ class Parking extends Equatable {
     required this.description,
     required this.phone,
     required this.slots,
+    required this.carValue,
+    required this.motoValue,
     required this.conforts,
     required this.place,
     required this.createAt,
   });
 
-  factory Parking.fromJson(Map<String, dynamic> map) {
+factory Parking.fromJson(Map<String, dynamic> map) {
     return Parking(
       uid: map["uid"] ?? '',
-      owner: map['owner'] ?? AppUser.empty(),
+      owner:
+          map['owner'] is Map<String, dynamic>
+              ? AppUser.fromMap(map['owner'])
+              : AppUser.empty(),
       displayName: map['displayName'] ?? '',
       description: map['description'] ?? '',
       phone: map['phone'] ?? '',
       slots: map['slots'] ?? 10,
-      conforts: map['conforts'] ?? [],
-      place: map['place'] ?? Place.empty(),
-      createAt: (map['createAt'] as Timestamp).toDate(),
+      carValue: map['carValue'] ?? 0.0,
+      motoValue: map['motoValue'] ?? 0.0,
+      conforts: List<String>.from(map['conforts'] ?? []),
+      place:
+          map['place'] is Map<String, dynamic>
+              ? PlaceShort.fromMap(map['place'])
+              : PlaceShort.empty(),
+      createAt:
+          map['createAt'] is Timestamp
+              ? (map['createAt'] as Timestamp).toDate()
+              : DateTime.tryParse(map['createAt']?.toString() ?? '') ??
+                  DateTime.now(),
     );
   }
-
   factory Parking.fromRealtimeJson(Map<String, dynamic> map) {
     return Parking(
       uid: map["uid"] ?? '',
       owner: map['owner'] ?? AppUser.empty(),
       displayName: map['displayName'] ?? '',
       description: map['description'] ?? '',
-      phone: map['phone'] ?? '',
-      slots: map['slots'] ?? 10,
+      phone: map['phone'] ?? 0.0,
+      slots: map['slots'] ?? 0,
+      carValue: map['carValue'] ?? 0.0,
+      motoValue: map['motoValue'] ?? 0.0,
       conforts: map['conforts'] ?? [],
       place: map['place'] ?? Place.empty(),
       createAt: (map['createAt'] as Timestamp).toDate(),
@@ -64,6 +82,8 @@ class Parking extends Equatable {
       'description': description,
       'phone': phone,
       'slots': slots,
+      'carValue': carValue,
+      'motoValue': motoValue,
       'conforts': conforts,
       'place': place.toJson(),
       'createAt': createAt,
@@ -77,7 +97,9 @@ class Parking extends Equatable {
       displayName: '',
       description: '',
       phone: '',
-      slots: 10,
+      slots: 0,
+      carValue: 0.0,
+      motoValue: 0.0,
       conforts: [],
       place: PlaceShort.empty(),
       createAt: DateTime.now(),
@@ -98,6 +120,8 @@ class Parking extends Equatable {
     description,
     phone,
     slots,
+    carValue,
+    motoValue,
     conforts,
     place,
     createAt,

@@ -57,7 +57,11 @@ class AppUser extends Equatable {
       contato: map['contato'] ?? '',
       email: map['email'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
-      createAt: map['createAte'] ?? '',
+      createAt:
+          (map['createAt'] is Timestamp)
+              ? (map['createAt'] as Timestamp).toDate()
+              : DateTime.tryParse(map['createAt']?.toString() ?? '') ??
+                  DateTime.now(),
     );
   }
 
