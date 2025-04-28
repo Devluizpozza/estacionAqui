@@ -4,8 +4,8 @@ import 'package:estacionaqui/app/modules/login/login_bindings.dart';
 import 'package:estacionaqui/app/modules/login/login_view.dart';
 import 'package:estacionaqui/app/modules/login/register_user_bindings.dart';
 import 'package:estacionaqui/app/modules/login/register_user_view.dart';
-import 'package:estacionaqui/app/modules/map/google_map_bindings.dart';
-import 'package:estacionaqui/app/modules/map/google_map_view.dart';
+import 'package:estacionaqui/app/modules/map/map_bindings.dart';
+import 'package:estacionaqui/app/modules/map/map_view.dart';
 import 'package:estacionaqui/app/modules/parking/parking_add_bindings.dart';
 import 'package:estacionaqui/app/modules/parking/parking_add_view.dart';
 import 'package:estacionaqui/app/modules/parking/parking_owner_list_bindings.dart';
@@ -36,11 +36,7 @@ abstract class AppPages {
       page: () => RegisterUserView(),
       binding: RegisterUserBindings(),
     ),
-    GetPage(
-      name: AppRoutes.map,
-      page: () => GoogleMaps(),
-      binding: GoogleMapsBindings(),
-    ),
+    GetPage(name: AppRoutes.map, page: () => MapView(), binding: MapBindings()),
     GetPage(
       name: AppRoutes.user_profile,
       page: () => UserProfileView(),

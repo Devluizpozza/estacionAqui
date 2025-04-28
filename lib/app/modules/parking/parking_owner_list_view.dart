@@ -75,36 +75,41 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
                       ),
                       const SizedBox(height: 20),
                       Expanded(
-                        child: Visibility(
-                          visible: controller.parkings.isNotEmpty,
-                          replacement: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40),
-                            child: Text(
-                              "Não há estacionamentos cadastrados",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.blueGrey,
+                        child: Obx(
+                          () => Visibility(
+                            visible: controller.parkings.isNotEmpty,
+                            replacement: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                              ),
+                              child: Text(
+                                "Não há estacionamentos cadastrados",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                ),
                               ),
                             ),
-                          ),
-                          child: ListView.builder(
-                            itemCount: controller.parkings.length,
-                            itemBuilder: (context, index) {
-                              final Parking parking =
-                                  controller.parkings[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: _buildParkingCard(
-                                  title: parking.displayName,
-                                  spots: "15/${parking.slots} vagas",
-                                  earnings: "R\$ 540,00 hoje",
-                                  onTap:
-                                      () =>
-                                          Get.toNamed(AppRoutes.parking_owner),
-                                ),
-                              );
-                            },
+                            child: ListView.builder(
+                              itemCount: controller.parkings.length,
+                              itemBuilder: (context, index) {
+                                final Parking parking =
+                                    controller.parkings[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _buildParkingCard(
+                                    title: parking.displayName,
+                                    spots: "15/${parking.slots} vagas",
+                                    earnings: "R\$ 540,00 hoje",
+                                    onTap:
+                                        () => Get.toNamed(
+                                          AppRoutes.parking_owner,
+                                        ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),

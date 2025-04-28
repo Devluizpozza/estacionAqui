@@ -1,11 +1,12 @@
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
-class GoogleMapsController extends GetxController {
+class MapController extends GetxController {
   final Rxn<LatLng> currentPosition = Rxn<LatLng>();
-  late GoogleMapController mapController;
   final RxBool _isLoading = false.obs;
+  final Rx<List<Marker>> _markers = Rx<List<Marker>>(<Marker>[]);
 
   bool get isLoading => _isLoading.value;
 
@@ -14,20 +15,27 @@ class GoogleMapsController extends GetxController {
     _isLoading.refresh();
   }
 
-  final Set<Marker> markers = {
-    Marker(
-      markerId: const MarkerId("estacionamento1"),
-      position: const LatLng(-22.9711, -43.1822),
-      infoWindow: const InfoWindow(title: "Estacionamento Ipanema"),
-    ),
-  };
+  List<Marker> get markers => _markers.value;
+
+  set markers(List<Marker> value) {
+    _markers.value = value;
+    _markers.refresh();
+  }
+
+  // final Set<Marker> markers = {
+  //   Marker(
+  //     markerId: const MarkerId("estacionamento1"),
+  //     position: const LatLng(-22.9711, -43.1822),
+  //     infoWindow: const InfoWindow(title: "Estacionamento Ipanema"),
+  //   ),
+  // };
 
   @override
   void onInit() async {
     isLoading = true;
     Future.delayed(Duration(seconds: 2));
     await detectarLocalizacao();
-    super.onInit(); 
+    super.onInit();
     isLoading = false;
   }
 
@@ -46,9 +54,5 @@ class GoogleMapsController extends GetxController {
 
     Position position = await Geolocator.getCurrentPosition();
     currentPosition.value = LatLng(position.latitude, position.longitude);
-  }
-
-  void setMapController(GoogleMapController controller) {
-    mapController = controller;
   }
 }
