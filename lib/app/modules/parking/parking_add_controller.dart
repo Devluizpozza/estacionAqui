@@ -8,19 +8,23 @@ import 'package:estacionaqui/app/models/place_short_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
+import 'package:estacionaqui/app/services/address_map_service.dart';
 import 'package:estacionaqui/app/services/geo_location_service.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 
 class ParkingAddController extends GetxController {
-  final displayNameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final phoneController = TextEditingController();
+  final TextEditingController displayNameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
   final ParkingRepository parkingRepository = ParkingRepository();
   final AppUserRepository appUserRepository = AppUserRepository();
   final Rx<int> _slot = Rx<int>(10);
   final Rx<List<String>> _comforts = Rx<List<String>>([]);
+  final Rx<PlaceShort> _place = Rx<PlaceShort>(PlaceShort.empty());
 
   int get slot => _slot.value;
 
@@ -36,6 +40,13 @@ class ParkingAddController extends GetxController {
     _comforts.refresh();
   }
 
+  PlaceShort get place => _place.value;
+
+  set place(PlaceShort value) {
+    _place.value = value;
+    _place.refresh();
+  }
+
   void createParking() async {
     Get.lazyPut(() => GeolocationService());
     AppUser ownerToSave = await appUserRepository.fetch(
@@ -47,14 +58,7 @@ class ParkingAddController extends GetxController {
           "erro ao criar estacionamento, usuário não localizado.",
         );
       }
-      final place = PlaceShort(
-        placeId: 'Rua das Flores',
-        countryCode: '123',
-        city: 'Florianópolis',
-        fu: 'SC',
-        fullAddress: 'Rua das Flores, 123 - Centro, Florianópolis/SC',
-        geolocationPoint: GeolocationPoint(0.0, 2.3),
-      );
+
       Parking parkingToSave = Parking(
         uid: DB.generateUID(Collections.parking),
         owner: ownerToSave,
@@ -80,6 +84,36 @@ class ParkingAddController extends GetxController {
     } catch (e) {
       Get.back();
       Logger.info(e.toString());
+    }
+  }
+
+  void getAddresByLatLng(LatLng latlng) async {
+    try {
+      place = PlaceShort.empty();
+      Map<String, dynamic>? dataFromParam =
+          await AddressMapService.getAddressFromCoordinates(
+            latlng.latitude,
+            latlng.longitude,
+          );
+      if (dataFromParam != null) {
+        Get.back();
+        populatePlace(dataFromParam);
+      }
+    } catch (e) {
+      Logger.info(e.toString());
+    }
+  }
+
+  void populatePlace(Map<String, dynamic> dataFromParam) {
+    if (dataFromParam.isNotEmpty) {
+      place = PlaceShort(
+        placeId: dataFromParam['suburb'],
+        countryCode: dataFromParam['postcode'],
+        city: dataFromParam['city'],
+        fu: dataFromParam['state'],
+        fullAddress: dataFromParam['fullAddress'],
+        geolocationPoint: GeolocationPoint(0.0, 2.3),
+      );
     }
   }
 }

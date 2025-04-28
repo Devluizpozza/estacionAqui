@@ -9,7 +9,6 @@ class UserProfileView extends GetView<UserProfileController> {
   const UserProfileView({super.key});
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Obx(
       () =>
