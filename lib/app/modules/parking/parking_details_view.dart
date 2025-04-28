@@ -1,7 +1,9 @@
+import 'package:estacionaqui/app/modules/parking/parking_details_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
 
-class ParkingOwnerView extends StatelessWidget {
-  const ParkingOwnerView({super.key});
+class ParkingDetails extends GetView<ParkingDetailsController> {
+  const ParkingDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,7 @@ class ParkingOwnerView extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         title: Text(
-          'nome do estacionamento',
+          controller.parkingName,
           style: const TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w600,
@@ -63,7 +65,6 @@ class ParkingOwnerView extends StatelessWidget {
 
             Expanded(
               child: ListView(
-                
                 children: const [
                   ListTile(
                     leading: Icon(Icons.directions_car),

@@ -45,4 +45,8 @@ class ParkingOwnerListController extends GetxController {
       Logger.info(e.toString());
     }
   }
+
+  Future<void> onRefresh() async {
+    await listParkings();
+  }
 }

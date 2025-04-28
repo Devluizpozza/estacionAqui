@@ -12,6 +12,7 @@ import 'package:estacionaqui/app/services/address_map_service.dart';
 import 'package:estacionaqui/app/services/geo_location_service.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -25,6 +26,7 @@ class ParkingAddController extends GetxController {
   final Rx<int> _slot = Rx<int>(10);
   final Rx<List<String>> _comforts = Rx<List<String>>([]);
   final Rx<PlaceShort> _place = Rx<PlaceShort>(PlaceShort.empty());
+  final Rx<Marker?> _marker = Rx<Marker?>(null);
 
   int get slot => _slot.value;
 
@@ -45,6 +47,13 @@ class ParkingAddController extends GetxController {
   set place(PlaceShort value) {
     _place.value = value;
     _place.refresh();
+  }
+
+  Marker? get marker => _marker.value;
+
+  set marker(Marker? value) {
+    _marker.value = value;
+    _marker.refresh();
   }
 
   void createParking() async {
@@ -97,14 +106,14 @@ class ParkingAddController extends GetxController {
           );
       if (dataFromParam != null) {
         Get.back();
-        populatePlace(dataFromParam);
+        populatePlace(dataFromParam, latlng);
       }
     } catch (e) {
       Logger.info(e.toString());
     }
   }
 
-  void populatePlace(Map<String, dynamic> dataFromParam) {
+  void populatePlace(Map<String, dynamic> dataFromParam, LatLng latlng) {
     if (dataFromParam.isNotEmpty) {
       place = PlaceShort(
         placeId: dataFromParam['suburb'],
@@ -112,7 +121,7 @@ class ParkingAddController extends GetxController {
         city: dataFromParam['city'],
         fu: dataFromParam['state'],
         fullAddress: dataFromParam['fullAddress'],
-        geolocationPoint: GeolocationPoint(0.0, 2.3),
+        geolocationPoint: GeolocationPoint(latlng.latitude, latlng.longitude),
       );
     }
   }

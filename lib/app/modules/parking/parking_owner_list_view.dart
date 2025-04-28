@@ -1,8 +1,8 @@
 import 'package:estacionaqui/app/components/loading_widget.dart';
+import 'package:estacionaqui/app/components/scaffold_theme.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/modules/parking/parking_owner_list_controller.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
-import 'package:estacionaqui/app/services/auth_manager.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,38 +16,8 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
       () =>
           controller.isLoading
               ? LoadingWidget()
-              : Scaffold(
-                drawer: Drawer(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      DrawerHeader(
-                        decoration: BoxDecoration(color: AppColors.lightBlue),
-                        child: const Text(
-                          'Painel do Dono',
-                          style: TextStyle(color: Colors.white, fontSize: 24),
-                        ),
-                      ),
-                      const ListTile(
-                        leading: Icon(Icons.add_business),
-                        title: Text('Cadastrar Estacionamento'),
-                      ),
-                      const ListTile(
-                        leading: Icon(Icons.bar_chart),
-                        title: Text('Relatórios e Finanças'),
-                      ),
-                      const ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Configurações da Conta'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.logout),
-                        title: const Text('Sair'),
-                        onTap: () => AuthManager.instance.signOut(),
-                      ),
-                    ],
-                  ),
-                ),
+              : ScaffoldTheme(
+                onRefresh: controller.onRefresh,
                 appBar: AppBar(
                   title: const Text(
                     'Parking Owner',
@@ -61,59 +31,72 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
                   centerTitle: true,
                   iconTheme: const IconThemeData(color: Colors.black),
                 ),
-                body: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "🅿️ Meus Estacionamentos",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                body: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "🅿️ Meus Estacionamentos",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: Obx(
-                          () => Visibility(
-                            visible: controller.parkings.isNotEmpty,
-                            replacement: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 40,
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          child: Obx(
+                            () => Visibility(
+                              visible: controller.parkings.isNotEmpty,
+                              replacement: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 40,
+                                ),
+                                child: Text(
+                                  "Não há estacionamentos cadastrados",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: Colors.blueGrey,
+                                  ),
+                                ),
                               ),
-                              child: Text(
-                                "Não há estacionamentos cadastrados",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
+                              child: RefreshIndicator(
+                                onRefresh: controller.onRefresh,
+                                child: ListView.builder(
+                                  itemCount: controller.parkings.length,
+                                  itemBuilder: (context, index) {
+                                    final Parking parking =
+                                        controller.parkings[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 12,
+                                      ),
+                                      child: _buildParkingCard(
+                                        title: parking.displayName,
+                                        spots: "15/${parking.slots} vagas",
+                                        earnings: "R\$ 540,00 hoje",
+                                        onTap:
+                                            () => Get.toNamed(
+                                              AppRoutes.parking_details,
+                                              arguments: {
+                                                "parkingName":
+                                                    parking.displayName,
+                                                "parkingUID": parking.uid,
+                                              },
+                                            ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
-                            child: ListView.builder(
-                              itemCount: controller.parkings.length,
-                              itemBuilder: (context, index) {
-                                final Parking parking =
-                                    controller.parkings[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: _buildParkingCard(
-                                    title: parking.displayName,
-                                    spots: "15/${parking.slots} vagas",
-                                    earnings: "R\$ 540,00 hoje",
-                                    onTap:
-                                        () => Get.toNamed(
-                                          AppRoutes.parking_owner,
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 floatingActionButton: FloatingActionButton(

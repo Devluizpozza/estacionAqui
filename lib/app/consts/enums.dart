@@ -30,3 +30,24 @@ enum CarMarkType {
   volvo,
   yamaha,
 }
+
+enum MotoMarkType {
+  none,
+  bajaj,
+  bmw,
+  cfmoto,
+  dafra,
+  ducati,
+  harley_davidson,
+  honda,
+  kawasaki,
+  ktm,
+  mottu,
+  royal_enfield,
+  shineray,
+  suzuki,
+  triumph,
+  yamaha,
+}
+
+enum VehicleType { none, car, motorcycle }
