@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/models/place_model.dart';
 import 'package:estacionaqui/app/models/place_short_model.dart';
+import 'package:estacionaqui/app/models/ticket_model.dart';
 
 class Parking extends Equatable {
   final String uid;
@@ -14,8 +15,8 @@ class Parking extends Equatable {
   final int slots;
   final double carValue;
   final double motoValue;
-
   final List<String> conforts;
+  final List<Ticket>? tickets;
   final PlaceShort place;
   final DateTime createAt;
 
@@ -29,11 +30,12 @@ class Parking extends Equatable {
     required this.carValue,
     required this.motoValue,
     required this.conforts,
+    this.tickets = const <Ticket>[],
     required this.place,
     required this.createAt,
   });
 
-factory Parking.fromJson(Map<String, dynamic> map) {
+  factory Parking.fromJson(Map<String, dynamic> map) {
     return Parking(
       uid: map["uid"] ?? '',
       owner:
@@ -47,6 +49,7 @@ factory Parking.fromJson(Map<String, dynamic> map) {
       carValue: map['carValue'] ?? 0.0,
       motoValue: map['motoValue'] ?? 0.0,
       conforts: List<String>.from(map['conforts'] ?? []),
+      tickets: List<Ticket>.from(map['tickets'] ?? []),
       place:
           map['place'] is Map<String, dynamic>
               ? PlaceShort.fromMap(map['place'])
@@ -69,6 +72,7 @@ factory Parking.fromJson(Map<String, dynamic> map) {
       carValue: map['carValue'] ?? 0.0,
       motoValue: map['motoValue'] ?? 0.0,
       conforts: map['conforts'] ?? [],
+      tickets: map['tickets'] ?? [],
       place: map['place'] ?? Place.empty(),
       createAt: (map['createAt'] as Timestamp).toDate(),
     );
@@ -85,6 +89,7 @@ factory Parking.fromJson(Map<String, dynamic> map) {
       'carValue': carValue,
       'motoValue': motoValue,
       'conforts': conforts,
+      'tickets': tickets,
       'place': place.toJson(),
       'createAt': createAt,
     };
@@ -101,6 +106,7 @@ factory Parking.fromJson(Map<String, dynamic> map) {
       carValue: 0.0,
       motoValue: 0.0,
       conforts: [],
+      tickets: [],
       place: PlaceShort.empty(),
       createAt: DateTime.now(),
     );
@@ -123,6 +129,7 @@ factory Parking.fromJson(Map<String, dynamic> map) {
     carValue,
     motoValue,
     conforts,
+    tickets,
     place,
     createAt,
   ];

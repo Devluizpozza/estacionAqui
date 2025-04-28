@@ -19,7 +19,7 @@ class MapComponent extends StatefulWidget {
 class _MapComponentState extends State<MapComponent> {
   final MapController _mapController = MapController();
   final String _tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-  double _currentZoom = 13.0; // Zoom inicial
+  double _currentZoom = 14.0; // Zoom inicial
 
   void _addMarker(LatLng latlng) {
     widget.onLocationSelected(latlng); // Retorna a localização clicada

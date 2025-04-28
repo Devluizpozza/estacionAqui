@@ -23,20 +23,6 @@ class ParkingRepository extends DB {
     }
   }
 
-  Future<List<Parking>> listByOwner(String ownerUID) async {
-    try {
-      final query =
-          await CollectionsRef.parking
-              .where("owner.uid", isEqualTo: ownerUID)
-              .get();
-
-      return query.docs.map((doc) => doc.data()).toList();
-    } catch (e, s) {
-      Logger.info('Erro em listByOwner: $e\n$s');
-      return [];
-    }
-  }
-
   Future<bool> create(Parking parking) async {
     try {
       await CollectionsRef.parking.doc(parking.uid).set(parking);
@@ -64,6 +50,31 @@ class ParkingRepository extends DB {
     } catch (e) {
       Logger.info(e);
       return false;
+    }
+  }
+
+  Future<List<Parking>> list() async {
+    try {
+      final query = await CollectionsRef.parking.get();
+
+      return query.docs.map((doc) => doc.data()).toList();
+    } catch (e, s) {
+      Logger.info('Erro em listByOwner: $e\n$s');
+      return [];
+    }
+  }
+
+  Future<List<Parking>> listByOwner(String ownerUID) async {
+    try {
+      final query =
+          await CollectionsRef.parking
+              .where("owner.uid", isEqualTo: ownerUID)
+              .get();
+
+      return query.docs.map((doc) => doc.data()).toList();
+    } catch (e, s) {
+      Logger.info('Erro em listByOwner: $e\n$s');
+      return [];
     }
   }
 }

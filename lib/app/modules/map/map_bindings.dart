@@ -4,6 +4,6 @@ import 'package:get/get.dart';
 class MapBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MapController>(() => MapController());
+    Get.lazyPut<MapToViewController>(() => MapToViewController());
   }
 }

@@ -25,8 +25,8 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.star),
-              title: Text('Favoritos'),
+              leading: Icon(Icons.car_repair),
+              title: Text('Estacionamentos'),
               onTap: () => Get.toNamed(AppRoutes.parking_owner_list),
             ),
             ListTile(leading: Icon(Icons.history), title: Text('Histórico')),
