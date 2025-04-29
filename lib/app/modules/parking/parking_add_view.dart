@@ -33,6 +33,7 @@ class ParkingAddView extends GetView<ParkingAddController> {
                   suffixIcon: Icons.map,
                   onPressedSuffixIcon:
                       () => BottomSheetHandler.showSimpleBottomSheet(
+                        initialChildSize: 0.9,
                         context,
                         MapComponent(
                           markers: [],

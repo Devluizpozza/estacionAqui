@@ -15,7 +15,7 @@ class Parking extends Equatable {
   final int slots;
   final double carValue;
   final double motoValue;
-  final List<String> conforts;
+  final List<String> comforts;
   final List<Ticket>? tickets;
   final PlaceShort place;
   final DateTime createAt;
@@ -29,7 +29,7 @@ class Parking extends Equatable {
     required this.slots,
     required this.carValue,
     required this.motoValue,
-    required this.conforts,
+    required this.comforts,
     this.tickets = const <Ticket>[],
     required this.place,
     required this.createAt,
@@ -48,7 +48,7 @@ class Parking extends Equatable {
       slots: map['slots'] ?? 10,
       carValue: map['carValue'] ?? 0.0,
       motoValue: map['motoValue'] ?? 0.0,
-      conforts: List<String>.from(map['conforts'] ?? []),
+      comforts: List<String>.from(map['comforts'] ?? []),
       tickets: List<Ticket>.from(map['tickets'] ?? []),
       place:
           map['place'] is Map<String, dynamic>
@@ -71,7 +71,7 @@ class Parking extends Equatable {
       slots: map['slots'] ?? 0,
       carValue: map['carValue'] ?? 0.0,
       motoValue: map['motoValue'] ?? 0.0,
-      conforts: map['conforts'] ?? [],
+      comforts: map['comforts'] ?? [],
       tickets: map['tickets'] ?? [],
       place: map['place'] ?? Place.empty(),
       createAt: (map['createAt'] as Timestamp).toDate(),
@@ -88,7 +88,7 @@ class Parking extends Equatable {
       'slots': slots,
       'carValue': carValue,
       'motoValue': motoValue,
-      'conforts': conforts,
+      'comforts': comforts,
       'tickets': tickets,
       'place': place.toJson(),
       'createAt': createAt,
@@ -105,7 +105,7 @@ class Parking extends Equatable {
       slots: 0,
       carValue: 0.0,
       motoValue: 0.0,
-      conforts: [],
+      comforts: [],
       tickets: [],
       place: PlaceShort.empty(),
       createAt: DateTime.now(),
@@ -128,7 +128,7 @@ class Parking extends Equatable {
     slots,
     carValue,
     motoValue,
-    conforts,
+    comforts,
     tickets,
     place,
     createAt,

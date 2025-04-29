@@ -17,13 +17,13 @@ class MapView extends GetView<MapToViewController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Mapa')),
-      body: Obx(
-        () => Visibility(
-          visible: !controller.isLoading,
-          replacement: LoadingWidget(),
-          child: MapComponent(
+    return Obx(
+      () => Visibility(
+        visible: !controller.isLoading,
+        replacement: LoadingWidget(),
+        child: Scaffold(
+          appBar: AppBar(title: Text('Mapa')),
+          body: MapComponent(
             markers: controller.markers,
             onLocationSelected: _locationSelected,
           ),

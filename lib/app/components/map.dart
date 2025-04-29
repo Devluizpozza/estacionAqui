@@ -48,73 +48,76 @@ class _MapComponentState extends State<MapComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: LatLng(-23.5505, -46.6333),
-              initialZoom: _currentZoom,
-              onTap: (tapPosition, latlng) => _addMarker(latlng),
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: _tileUrl,
-                userAgentPackageName: 'com.example.app',
+    return SizedBox(
+      height: 900,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                initialCenter: LatLng(-27.711397, -48.497016),
+                initialZoom: _currentZoom,
+                onTap: (tapPosition, latlng) => _addMarker(latlng),
               ),
-              MarkerLayer(markers: widget.markers),
-            ],
-          ),
-          Positioned(
-            right: 10,
-            bottom: 100,
-            child: Column(
               children: [
-                // Botão de Zoom +
-                FloatingActionButton(
-                  heroTag: 'zoomIn',
-                  mini: true,
-                  backgroundColor: Colors.white,
-                  onPressed: _zoomIn,
-                  child: const Icon(Icons.add, color: Colors.black),
+                TileLayer(
+                  urlTemplate: _tileUrl,
+                  userAgentPackageName: 'com.example.app',
                 ),
-                const SizedBox(height: 8),
-                // Slider de Zoom
-                Container(
-                  height: 150,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 5),
-                    ],
-                  ),
-                  child: RotatedBox(
-                    quarterTurns: -1, // Deixa o slider vertical
-                    child: Slider(
-                      min: 1.0,
-                      max: 20.0,
-                      divisions: 19,
-                      value: _currentZoom,
-                      onChanged: _onZoomSliderChanged,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Botão de Zoom -
-                FloatingActionButton(
-                  heroTag: 'zoomOut',
-                  mini: true,
-                  backgroundColor: Colors.white,
-                  onPressed: _zoomOut,
-                  child: const Icon(Icons.remove, color: Colors.black),
-                ),
+                MarkerLayer(markers: widget.markers),
               ],
             ),
-          ),
-        ],
+            Positioned(
+              right: 10,
+              bottom: 100,
+              child: Column(
+                children: [
+                  // Botão de Zoom +
+                  FloatingActionButton(
+                    heroTag: 'zoomIn',
+                    mini: true,
+                    backgroundColor: Colors.white,
+                    onPressed: _zoomIn,
+                    child: const Icon(Icons.add, color: Colors.black),
+                  ),
+                  const SizedBox(height: 8),
+                  // Slider de Zoom
+                  Container(
+                    height: 150,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26, blurRadius: 5),
+                      ],
+                    ),
+                    child: RotatedBox(
+                      quarterTurns: -1, // Deixa o slider vertical
+                      child: Slider(
+                        min: 1.0,
+                        max: 20.0,
+                        divisions: 19,
+                        value: _currentZoom,
+                        onChanged: _onZoomSliderChanged,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Botão de Zoom -
+                  FloatingActionButton(
+                    heroTag: 'zoomOut',
+                    mini: true,
+                    backgroundColor: Colors.white,
+                    onPressed: _zoomOut,
+                    child: const Icon(Icons.remove, color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

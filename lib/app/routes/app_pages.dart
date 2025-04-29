@@ -8,6 +8,8 @@ import 'package:estacionaqui/app/modules/map/map_bindings.dart';
 import 'package:estacionaqui/app/modules/map/map_view.dart';
 import 'package:estacionaqui/app/modules/parking/parking_add_bindings.dart';
 import 'package:estacionaqui/app/modules/parking/parking_add_view.dart';
+import 'package:estacionaqui/app/modules/parking/parking_detail_bindings.dart';
+import 'package:estacionaqui/app/modules/parking/parking_detail_view.dart';
 import 'package:estacionaqui/app/modules/parking/parking_details_bindings.dart';
 import 'package:estacionaqui/app/modules/parking/parking_details_view.dart';
 import 'package:estacionaqui/app/modules/parking/parking_owner_list_bindings.dart';
@@ -54,14 +56,19 @@ abstract class AppPages {
       binding: ParkingOwnerBindings(),
     ),
     GetPage(
-      name: AppRoutes.parking_details,
-      page: () => ParkingDetails(),
-      binding: ParkingDetailsBindings(),
+      name: AppRoutes.parking_financial,
+      page: () => ParkingFinancialView(),
+      binding: ParkingFinancialBindings(),
     ),
     GetPage(
       name: AppRoutes.parking_add,
       page: () => ParkingAddView(),
       binding: ParkingAddBindings(),
+    ),
+    GetPage(
+      name: AppRoutes.parking_detail,
+      page: () => ParkingDetailView(),
+      binding: ParkingDetailBindings(),
     ),
     GetPage(name: AppRoutes.initial, page: () => AuthStateWidget()),
   ];

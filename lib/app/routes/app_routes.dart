@@ -8,6 +8,7 @@ abstract class AppRoutes {
   static const String verify = '/verify';
   static const String confirm_sms_code = '/confirmSmsCode';
   static const String parking_owner_list = '/parkingOwnerList';
-  static const String parking_details = '/parkingDetails';
+  static const String parking_financial = '/parkingFinancial';
   static const String parking_add = '/parkingAdd';
+  static const String parking_detail = '/parkingDetail';
 }

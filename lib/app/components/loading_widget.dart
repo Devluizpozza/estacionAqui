@@ -1,95 +1,36 @@
+import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class LoadingWidget extends StatefulWidget {
+class LoadingWidget extends StatelessWidget {
   const LoadingWidget({super.key});
-
-  @override
-  State<LoadingWidget> createState() => _LoadingWidgetState();
-}
-
-class _LoadingWidgetState extends State<LoadingWidget>
-    with TickerProviderStateMixin {
-  late AnimationController _dotsController;
-  late List<Animation<double>> _dotAnimations;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _dotsController = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    )..repeat();
-
-    _dotAnimations = List.generate(3, (index) {
-      final start = index * 0.2;
-      final end = start + 0.6;
-      return Tween(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _dotsController,
-          curve: Interval(start, end, curve: Curves.easeInOut),
-        ),
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _dotsController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF10131A),
+      backgroundColor: AppColors.lightGrey,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 100,
-              child: Image.asset(
-                'assets/images/loading_car.gif',
-                fit: BoxFit.contain,
-              ),
-            ),
+            // Logo ou imagem ilustrativa
+            Image.asset('assets/images/logo_car.png', height: 100),
+            const SizedBox(height: 32),
 
-            const SizedBox(height: 15),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(width: 15),
-                const Text(
-                  'Carregando',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                AnimatedBuilder(
-                  animation: _dotsController,
-                  builder: (context, child) {
-                    return Row(
-                      children: List.generate(3, (i) {
-                        return Opacity(
-                          opacity: _dotAnimations[i].value,
-                          child: const Text(
-                            '.',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                      }),
-                    );
-                  },
-                ),
-              ],
+            // Indicador de progresso
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.solarYellow),
+              strokeWidth: 3,
+            ),
+            const SizedBox(height: 24),
+
+            // Texto de carregamento
+            Text(
+              "Carregando...",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black54,
+              ),
             ),
           ],
         ),
