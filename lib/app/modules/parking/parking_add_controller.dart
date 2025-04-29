@@ -75,7 +75,7 @@ class ParkingAddController extends GetxController {
         description: descriptionController.text,
         phone: '+55${phoneController.text}',
         place: place,
-        conforts: comforts,
+        comforts: comforts,
         slots: slot,
         carValue: 0,
         motoValue: 0,

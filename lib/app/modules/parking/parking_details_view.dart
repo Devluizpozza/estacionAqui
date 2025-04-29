@@ -2,8 +2,8 @@ import 'package:estacionaqui/app/modules/parking/parking_details_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 
-class ParkingDetails extends GetView<ParkingDetailsController> {
-  const ParkingDetails({super.key});
+class ParkingFinancialView extends GetView<ParkingFinancialController> {
+  const ParkingFinancialView({super.key});
 
   @override
   Widget build(BuildContext context) {

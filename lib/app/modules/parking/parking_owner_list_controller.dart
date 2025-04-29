@@ -1,10 +1,12 @@
+import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
+import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ParkingOwnerListController extends GetxController {
   final Rx<List<Parking>> _parkings = Rx<List<Parking>>([]);
@@ -48,5 +50,32 @@ class ParkingOwnerListController extends GetxController {
 
   Future<void> onRefresh() async {
     await listParkings();
+  }
+
+  void parkingOptionOnLongPressed(BuildContext context, Parking parking) {
+    BottomSheetHandler.showConfirmationBottomSheet(
+      title: "Deseja excluir ${parking.displayName}?",
+      confirmText: "Excluir",
+      confirmColor: Colors.red,
+      cancelText: "cancel",
+      onCancel: () => Get.back(),
+      context: Get.context!,
+      onConfirm: () async {
+        await deleteParking(parking.uid);
+        await onRefresh();
+      },
+    );
+  }
+
+  Future<void> deleteParking(String parkingUID) async {
+    try {
+      bool success = await parkingRepository.delete(parkingUID);
+      if (success) {
+        SnackBarHandler.snackBarSuccess("Estacionamento removido");
+      }
+      {}
+    } catch (e) {
+      Logger.info(e.toString());
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class ParkingDetailsController extends GetxController {
+class ParkingFinancialController extends GetxController {
   final Rx<String> _parkingName = Rx<String>('');
   final Rx<int> _totalMoneyToday = Rx<int>(0);
   late String parkingUID;

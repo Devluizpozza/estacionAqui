@@ -118,8 +118,12 @@ class HomeView extends GetView<HomeController> {
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    QuickActionCard(icon: Icons.star, label: 'Favoritos'),
+                  children: [
+                    QuickActionCard(
+                      icon: Icons.car_repair,
+                      label: 'Estacionamento',
+                      onTap: () => Get.toNamed(AppRoutes.parking_owner_list),
+                    ),
                     QuickActionCard(icon: Icons.history, label: 'Recentes'),
                     QuickActionCard(
                       icon: Icons.attach_money,

@@ -1,14 +1,19 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:estacionaqui/app/db/collections.dart';
+import 'package:estacionaqui/app/db/db.dart';
+import 'package:estacionaqui/app/models/follower.dart';
+
 abstract class CollectionsGroupRef {
-  // static Query<ScoreBySport> get scoreBySport => DB.firestoreInstance
-  //     .collectionGroup(Collections.score_by_sport)
-  //     .withConverter<ScoreBySport>(
-  //       fromFirestore: (snapshot, _) {
-  //         return ScoreBySport.fromJson(snapshot.data()!);
-  //       },
-  //       toFirestore: (ScoreBySport scoreBySport, _) {
-  //         return scoreBySport.toJson();
-  //       },
-  //     );
+  static Query<Follower> get follower => DB.firestoreInstance
+      .collectionGroup(Collections.follower)
+      .withConverter<Follower>(
+        fromFirestore: (snapshot, _) {
+          return Follower.fromJson(snapshot.data()!);
+        },
+        toFirestore: (Follower scoreBySport, _) {
+          return scoreBySport.toJson();
+        },
+      );
 }

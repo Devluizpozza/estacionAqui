@@ -75,12 +75,18 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
                                         bottom: 12,
                                       ),
                                       child: _buildParkingCard(
+                                        onLongPress:
+                                            () => controller
+                                                .parkingOptionOnLongPressed(
+                                                  context,
+                                                  parking,
+                                                ),
                                         title: parking.displayName,
                                         spots: "15/${parking.slots} vagas",
                                         earnings: "R\$ 540,00 hoje",
                                         onTap:
                                             () => Get.toNamed(
-                                              AppRoutes.parking_details,
+                                              AppRoutes.parking_financial,
                                               arguments: {
                                                 "parkingName":
                                                     parking.displayName,
@@ -115,9 +121,14 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
     required String spots,
     required String earnings,
     void Function()? onTap,
+    void Function()? onLongPress,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
+      borderRadius: BorderRadius.circular(16),
+      splashColor: Colors.grey.shade400,
+      highlightColor: Colors.grey.shade300,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 4,
