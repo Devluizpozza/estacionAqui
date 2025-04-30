@@ -6,6 +6,7 @@ import 'package:estacionaqui/app/models/follower.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
+import 'package:estacionaqui/app/repositories/follower_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
@@ -21,6 +22,7 @@ class MapToViewController extends GetxController {
   final RxBool _isLoading = false.obs;
   final Rx<List<Marker>> _markers = Rx<List<Marker>>(<Marker>[]);
   final ParkingRepository parkingRepository = ParkingRepository();
+  final FollowerRepository followerRepository = FollowerRepository();
   final AppUserRepository userRepository = AppUserRepository();
   final RxMap<String, bool> followingStatus = <String, bool>{}.obs;
 
@@ -67,7 +69,7 @@ class MapToViewController extends GetxController {
 
   Future<void> checkIfFollowing(String parkingUID) async {
     try {
-      final followers = await parkingRepository.listFollowers(parkingUID);
+      final followers = await followerRepository.listFollowers(parkingUID);
       final isFollowing = followers.any(
         (follower) => follower.userUID == userUID,
       );
@@ -81,7 +83,7 @@ class MapToViewController extends GetxController {
   Future<void> handleFollow(String parkingUID) async {
     try {
       AppUser user = await userRepository.fetch(userUID);
-      List<Follower> remoteFollower = await parkingRepository.listFollowers(
+      List<Follower> remoteFollower = await followerRepository.listFollowers(
         parkingUID,
       );
       Follower? meFollow = remoteFollower.firstWhereOrNull(
@@ -94,9 +96,9 @@ class MapToViewController extends GetxController {
           userName: user.name,
           createAt: DateTime.now(),
         );
-        await parkingRepository.createFollower(parkingUID, followerToSave);
+        await followerRepository.createFollower(parkingUID, followerToSave);
       } else {
-        await parkingRepository.removeFollower(parkingUID, userUID);
+        await followerRepository.removeFollower(parkingUID, userUID);
       }
       await checkIfFollowing(parkingUID);
     } catch (e) {

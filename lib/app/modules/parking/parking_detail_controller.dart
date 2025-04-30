@@ -6,6 +6,7 @@ import 'package:estacionaqui/app/models/follower.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
+import 'package:estacionaqui/app/repositories/follower_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:get/get.dart';
 class ParkingDetailController extends GetxController {
   final ParkingRepository parkingRepository = ParkingRepository();
   final AppUserRepository userRepository = AppUserRepository();
+  final FollowerRepository followerRepository = FollowerRepository();
   final RxMap<String, bool> followingStatus = <String, bool>{}.obs;
   late Parking parking;
   final RxBool _isFollowing = false.obs;
@@ -50,7 +52,7 @@ class ParkingDetailController extends GetxController {
   Future<void> handleFollow() async {
     try {
       AppUser user = await userRepository.fetch(userUID);
-      List<Follower> remoteFollower = await parkingRepository.listFollowers(
+      List<Follower> remoteFollower = await followerRepository.listFollowers(
         parking.uid,
       );
       Follower? meFollow = remoteFollower.firstWhereOrNull(
@@ -63,10 +65,10 @@ class ParkingDetailController extends GetxController {
           userName: user.name,
           createAt: DateTime.now(),
         );
-        await parkingRepository.createFollower(parking.uid, followerToSave);
+        await followerRepository.createFollower(parking.uid, followerToSave);
         isFollowing = true;
       } else {
-        await parkingRepository.removeFollower(parking.uid, userUID);
+        await followerRepository.removeFollower(parking.uid, userUID);
         isFollowing = false;
       }
       await checkIfFollowing(parking.uid);
@@ -77,7 +79,7 @@ class ParkingDetailController extends GetxController {
 
   Future<void> checkIfFollowing(String parkingUID) async {
     try {
-      final followers = await parkingRepository.listFollowers(parkingUID);
+      final followers = await followerRepository.listFollowers(parkingUID);
       final isUserFollowing = followers.any(
         (follower) => follower.userUID == userUID,
       );
