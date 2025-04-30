@@ -10,13 +10,9 @@ class Ticket extends Equatable {
   final String payerUID;
   final String parkingUID;
   final VehicleType vehicleType;
-  final CarMarkType? carMarkType;
-  final MotoMarkType? motoMarkType;
   final DateTime createAt;
 
   const Ticket({
-    this.carMarkType = CarMarkType.none,
-    this.motoMarkType = MotoMarkType.none,
     required this.uid,
     required this.value,
     required this.description,
@@ -36,12 +32,6 @@ class Ticket extends Equatable {
       vehicleType: VehicleType.values.firstWhere(
         (VehicleType vehicleType) => vehicleType.name == map['vehicleType'],
       ),
-      carMarkType: CarMarkType.values.firstWhere(
-        (CarMarkType carMarkType) => carMarkType.name == map['carMarkType'],
-      ),
-      motoMarkType: MotoMarkType.values.firstWhere(
-        (MotoMarkType motoMarkType) => motoMarkType.name == map['motoMarkType'],
-      ),
       createAt:
           map['createAt'] is Timestamp
               ? (map['createAt'] as Timestamp).toDate()
@@ -59,12 +49,6 @@ class Ticket extends Equatable {
       vehicleType: VehicleType.values.firstWhere(
         (VehicleType vehicleType) => vehicleType.name == map['vehicleType'],
       ),
-      carMarkType: CarMarkType.values.firstWhere(
-        (CarMarkType carMarkType) => carMarkType.name == map['carMarkType'],
-      ),
-      motoMarkType: MotoMarkType.values.firstWhere(
-        (MotoMarkType motoMarkType) => motoMarkType.name == map['motoMarkType'],
-      ),
       createAt: (map['createAt'] as Timestamp).toDate(),
     );
   }
@@ -77,8 +61,6 @@ class Ticket extends Equatable {
       'payerUID': payerUID,
       'parkingUID': parkingUID,
       'vehicleType': vehicleType,
-      'carMarkType': carMarkType,
-      'motoMarkType': motoMarkType,
       'createAt': createAt,
     };
   }
@@ -91,8 +73,6 @@ class Ticket extends Equatable {
       payerUID: '',
       parkingUID: '',
       vehicleType: VehicleType.car,
-      carMarkType: CarMarkType.none,
-      motoMarkType: MotoMarkType.none,
       createAt: DateTime.now(),
     );
   }
@@ -111,8 +91,6 @@ class Ticket extends Equatable {
     payerUID,
     parkingUID,
     vehicleType,
-    carMarkType,
-    motoMarkType,
     createAt,
   ];
 }

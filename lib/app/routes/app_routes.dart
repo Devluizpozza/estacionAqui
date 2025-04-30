@@ -11,4 +11,5 @@ abstract class AppRoutes {
   static const String parking_financial = '/parkingFinancial';
   static const String parking_add = '/parkingAdd';
   static const String parking_detail = '/parkingDetail';
+  static const String vehicle_list = '/vehicleList';
 }

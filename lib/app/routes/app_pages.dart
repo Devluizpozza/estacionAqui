@@ -18,6 +18,8 @@ import 'package:estacionaqui/app/modules/sms/confirm_sms_code_bindings.dart';
 import 'package:estacionaqui/app/modules/sms/confirm_sms_code_view.dart';
 import 'package:estacionaqui/app/modules/user/user_profile/user_profile_bindings.dart';
 import 'package:estacionaqui/app/modules/user/user_profile/user_profile_view.dart';
+import 'package:estacionaqui/app/modules/vehicle/vehicle_list_bindings.dart';
+import 'package:estacionaqui/app/modules/vehicle/vehicle_list_view.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/services/auth_state_widget.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -69,6 +71,11 @@ abstract class AppPages {
       name: AppRoutes.parking_detail,
       page: () => ParkingDetailView(),
       binding: ParkingDetailBindings(),
+    ),
+    GetPage(
+      name: AppRoutes.vehicle_list,
+      page: () => VehicleListView(),
+      binding: VehicleListBindings(),
     ),
     GetPage(name: AppRoutes.initial, page: () => AuthStateWidget()),
   ];
