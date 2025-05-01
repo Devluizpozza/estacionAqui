@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/collections_ref.dart';
 import 'package:estacionaqui/app/db/db.dart';
-import 'package:estacionaqui/app/models/follower.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 
@@ -79,7 +77,6 @@ class ParkingRepository extends DB {
       return [];
     }
   }
-
 
   // Future<List<Parking>> sumFollowers(String ownerUID) async {
   //   try {

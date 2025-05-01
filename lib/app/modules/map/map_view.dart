@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:estacionaqui/app/components/loading_widget.dart';
 import 'package:estacionaqui/app/components/map.dart';
 import 'package:estacionaqui/app/modules/map/map_controller.dart';
@@ -11,7 +13,6 @@ class MapView extends GetView<MapToViewController> {
 
   void _locationSelected(LatLng latlng) {
     // Aqui você vai fazer algo com a localização clicada
-    print('Local selecionado: ${latlng.latitude}, ${latlng.longitude}');
     // Exemplo: salvar no banco de dados ou no estado do app
   }
 

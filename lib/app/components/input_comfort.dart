@@ -72,7 +72,7 @@ class _InputComfortState extends State<InputComfort> {
                   label: Text(comfort),
                   deleteIcon: const Icon(Icons.close),
                   onDeleted: () => _removeComfort(comfort),
-                  backgroundColor: AppColors.lightBlue.withOpacity(0.2),
+                  backgroundColor: AppColors.lightBlue,
                   labelStyle: const TextStyle(color: Colors.black87),
                 );
               }).toList(),

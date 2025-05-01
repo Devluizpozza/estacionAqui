@@ -105,7 +105,7 @@ class AuthManager extends GetxController {
           _showCodeInputBottomSheet(verificationId, phoneNumber);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          print(verificationId);
+          // print(verificationId);
         },
       );
     } catch (e) {

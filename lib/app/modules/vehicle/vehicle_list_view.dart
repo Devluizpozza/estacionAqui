@@ -3,6 +3,7 @@ import 'package:estacionaqui/app/components/scaffold_theme.dart';
 import 'package:estacionaqui/app/components/vehicle_card.dart';
 import 'package:estacionaqui/app/models/vehicle_model.dart';
 import 'package:estacionaqui/app/modules/vehicle/vehicle_list_controller.dart';
+import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -88,7 +89,7 @@ class VehicleListView extends GetView<VehicleListController> {
                 ),
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
-                    controller.createVehicle();
+                    Get.toNamed(AppRoutes.vehicleAdd);
                   },
                   backgroundColor: AppColors.lightBlue,
                   child: const Icon(Icons.add, color: Colors.white),

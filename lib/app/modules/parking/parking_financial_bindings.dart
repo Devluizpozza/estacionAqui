@@ -1,4 +1,4 @@
-import 'package:estacionaqui/app/modules/parking/parking_details_controller.dart';
+import 'package:estacionaqui/app/modules/parking/parking_financial_controller.dart';
 import 'package:get/get.dart';
 
 class ParkingFinancialBindings extends Bindings {

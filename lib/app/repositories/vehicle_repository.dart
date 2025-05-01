@@ -49,7 +49,7 @@ class VehicleRepository {
               .get();
 
       return query.docs.map((doc) => Vehicle.fromJson(doc.data())).toList();
-    } catch (e, s) {
+    } catch (e) {
       Logger.info(e.toString());
       return [];
     }

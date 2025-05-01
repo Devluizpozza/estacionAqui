@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, depend_on_referenced_packages
 import 'package:equatable/equatable.dart';
 import 'package:estacionaqui/app/models/geo_fire_point_model.dart';
 import 'package:estacionaqui/app/models/geo_location_point_model.dart';
@@ -312,9 +312,7 @@ class Place extends Equatable {
 
   static GeoFirePoint geometryToGeoFirePoint(Map<String, dynamic> map) {
     Map<String, dynamic> location = map["location"];
-    return GeoFirePoint(4.0, 5.0);
-    // Geoflutterfire()
-    //     .point(latitude: location["lat"], longitude: location["lng"]);
+    return GeoFirePoint(location["lat"], location["lng"]);
   }
 
   static Map<String, dynamic> fromAddressComponents(

@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,10 +21,10 @@ class MapComponent extends StatefulWidget {
 class _MapComponentState extends State<MapComponent> {
   final MapController _mapController = MapController();
   final String _tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-  double _currentZoom = 14.0; // Zoom inicial
+  double _currentZoom = 12.0;
 
   void _addMarker(LatLng latlng) {
-    widget.onLocationSelected(latlng); // Retorna a localização clicada
+    widget.onLocationSelected(latlng);
   }
 
   void _zoomIn() {

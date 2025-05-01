@@ -1,34 +1,33 @@
 import 'package:estacionaqui/app/db/collections.dart';
-import 'package:estacionaqui/app/db/collections_group_ref.dart';
 import 'package:estacionaqui/app/db/collections_ref.dart';
-import 'package:estacionaqui/app/models/follower.dart';
+import 'package:estacionaqui/app/models/ticket_model.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 
 class TicketRepository {
   TicketRepository();
 
-  Future<bool> createFollower(String parkingUID, Follower follower) async {
+  Future<bool> create(String parkingUID, Ticket ticket) async {
     try {
       await CollectionsRef.parking
           .doc(parkingUID)
-          .collection(Collections.follower)
-          .doc(follower.uid)
-          .set(follower.toJson());
+          .collection(Collections.ticket)
+          .doc(ticket.uid)
+          .set(ticket.toJson());
 
       return true;
-    } catch (e, s) {
-      Logger.info('Erro ao contar followers: $e\n$s');
+    } catch (e) {
+      Logger.info(e.toString());
       return false;
     }
   }
 
-  Future<bool> removeFollower(String parkingUID, String userUID) async {
+  Future<bool> remove(String parkingUID, String payerUID) async {
     try {
       final querySnapshot =
           await CollectionsRef.parking
               .doc(parkingUID)
-              .collection(Collections.follower)
-              .where('userUID', isEqualTo: userUID)
+              .collection(Collections.ticket)
+              .where('payerUID', isEqualTo: payerUID)
               .get();
 
       for (final doc in querySnapshot.docs) {
@@ -36,23 +35,38 @@ class TicketRepository {
       }
 
       return true;
-    } catch (e, s) {
-      Logger.info('Erro ao remover follower: $e\n$s');
+    } catch (e) {
+      Logger.info(e.toString());
       return false;
     }
   }
 
-  Future<int> sumFollowersByParking(String parkingUID) async {
+  Future<List<Ticket>> list(String parkingUID) async {
     try {
-      final querySnapshot =
-          await CollectionsGroupRef.follower
-              .where('uid', isEqualTo: parkingUID)
+      final query =
+          await CollectionsRef.parking
+              .doc(parkingUID)
+              .collection(Collections.ticket)
               .get();
 
-      return querySnapshot.docs.length;
-    } catch (e, s) {
-      Logger.info('Erro ao contar followers: $e\n$s');
-      return 0;
+      return query.docs.map((doc) => Ticket.fromJson(doc.data())).toList();
+    } catch (e) {
+      Logger.info(e.toString());
+      return [];
     }
   }
+
+  // Future<int> sumTotalTicketByDay(String parkingUID) async {
+  //   try {
+  //     final querySnapshot =
+  //         await CollectionsGroupRef.follower
+  //             .where('uid', isEqualTo: parkingUID)
+  //             .get();
+
+  //     return querySnapshot.docs.length;
+  //   } catch (e, s) {
+  //     Logger.info('Erro ao contar followers: $e\n$s');
+  //     return 0;
+  //   }
+  // }
 }

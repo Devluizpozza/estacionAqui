@@ -45,7 +45,7 @@ class VehicleListController extends GetxController {
     try {
       vehicles = await vehicleRepository.list(userUID);
       if (vehicles.isNotEmpty) {
-        print(vehicles);
+        // print(vehicles);
       }
     } catch (e) {
       Logger.info(e.toString());
@@ -66,7 +66,6 @@ class VehicleListController extends GetxController {
       bool success = await vehicleRepository.create(userUID, vehicle);
       if (success) {
         await onRefresh();
-        print("success");
       }
     } catch (e) {
       Logger.info(e.toString());
