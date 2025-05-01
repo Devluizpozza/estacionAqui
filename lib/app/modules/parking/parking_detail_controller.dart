@@ -1,13 +1,18 @@
+import 'package:estacionaqui/app/consts/enums.dart';
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
+import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/models/follower.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
+import 'package:estacionaqui/app/models/ticket_model.dart';
+import 'package:estacionaqui/app/models/vehicle_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/repositories/follower_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
+import 'package:estacionaqui/app/repositories/ticket_repository.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +21,17 @@ class ParkingDetailController extends GetxController {
   final ParkingRepository parkingRepository = ParkingRepository();
   final AppUserRepository userRepository = AppUserRepository();
   final FollowerRepository followerRepository = FollowerRepository();
+  final TicketRepository ticketRepository = TicketRepository();
   final RxMap<String, bool> followingStatus = <String, bool>{}.obs;
+  final Vehicle vehicle = Vehicle(
+    uid: DB.generateUID(Collections.vehicle),
+    userUID: "plne9b7A6mS2qmCjrmisyvytvg03",
+    plate: "CDF2222",
+    vehicleColor: "#ffffff",
+    vehicleType: VehicleType.car,
+    carMarkType: CarMarkType.audi,
+    createAt: DateTime.now(),
+  );
   late Parking parking;
   final RxBool _isFollowing = false.obs;
   final RxBool _isLoading = false.obs;
@@ -47,6 +62,38 @@ class ParkingDetailController extends GetxController {
   set isLoading(bool value) {
     _isLoading.value = value;
     _isLoading.refresh();
+  }
+
+  Future<void> createTicket() async {
+    try {
+      Ticket ticketToSave = Ticket(
+        uid: DB.generateUID(Collections.ticket),
+        payerUID: userUID,
+        description: "pagamento de entrada",
+        value: 15.0,
+        parkingUID: parking.uid,
+        vehicleType: VehicleType.car,
+        vehicle: vehicle,
+        createAt: DateTime.now(),
+      );
+      bool success = await ticketRepository.create(parking.uid, ticketToSave);
+      if (success) {
+        SnackBarHandler.snackBarSuccess('$ticketToSave criado');
+      }
+    } catch (e) {
+      Logger.info(e.toString());
+    }
+  }
+
+  Future<void> listTickets() async {
+    try {
+      final List<Ticket> listTicket = await ticketRepository.list(parking.uid);
+      if (listTicket.isNotEmpty) {
+        // print(listTicket);
+      }
+    } catch (e) {
+      Logger.info(e.toString());
+    }
   }
 
   Future<void> handleFollow() async {

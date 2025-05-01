@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:estacionaqui/app/components/loading_widget.dart';
 import 'package:estacionaqui/app/modules/parking/parking_detail_controller.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
@@ -170,7 +172,7 @@ class ParkingDetailView extends GetView<ParkingDetailController> {
                       ),
                       const SizedBox(height: 50),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => controller.createTicket(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.solarYellow,
                           padding: const EdgeInsets.symmetric(

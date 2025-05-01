@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
@@ -259,11 +261,13 @@ class MapToViewController extends GetxController {
             const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton(
-                onPressed:
-                    () => Get.toNamed(
-                      AppRoutes.parking_detail,
-                      arguments: {"parking": parking},
-                    ),
+                onPressed: () {
+                  Get.back();
+                  Get.toNamed(
+                    AppRoutes.parking_detail,
+                    arguments: {"parking": parking},
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
@@ -280,6 +284,7 @@ class MapToViewController extends GetxController {
           ],
         ),
         const SizedBox(height: 24),
+        // ignore: avoid_unnecessary_containers
         Container(
           child: Text(
             parking.description,

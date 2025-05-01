@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';

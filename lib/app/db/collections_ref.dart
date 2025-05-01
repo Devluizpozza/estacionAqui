@@ -3,6 +3,7 @@ import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
+import 'package:estacionaqui/app/models/ticket_model.dart';
 
 abstract class CollectionsRef {
   static CollectionReference get initialValue =>
@@ -27,6 +28,17 @@ abstract class CollectionsRef {
         },
         toFirestore: (Parking parking, _) {
           return parking.toJson();
+        },
+      );
+
+  static CollectionReference<Ticket> get ticket => DB.firestoreInstance
+      .collection(Collections.ticket)
+      .withConverter<Ticket>(
+        fromFirestore: (snapshot, _) {
+          return Ticket.fromJson(snapshot.data()!);
+        },
+        toFirestore: (Ticket ticket, _) {
+          return ticket.toJson();
         },
       );
 }

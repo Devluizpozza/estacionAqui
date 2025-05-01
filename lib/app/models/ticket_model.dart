@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:estacionaqui/app/consts/enums.dart';
+import 'package:estacionaqui/app/models/vehicle_model.dart';
 
 class Ticket extends Equatable {
   final String uid;
@@ -10,6 +11,8 @@ class Ticket extends Equatable {
   final String payerUID;
   final String parkingUID;
   final VehicleType vehicleType;
+  final Vehicle vehicle;
+  final bool parked;
   final DateTime createAt;
 
   const Ticket({
@@ -19,19 +22,30 @@ class Ticket extends Equatable {
     required this.payerUID,
     required this.parkingUID,
     required this.vehicleType,
+    required this.vehicle,
     required this.createAt,
+    this.parked = false,
   });
+
+  String get vtype => vehicleType.name;
 
   factory Ticket.fromJson(Map<String, dynamic> map) {
     return Ticket(
       uid: map["uid"] ?? '',
-      value: map['value'] ?? 0.0,
+      value: (map['value'] ?? 0).toDouble(),
       description: map['description'] ?? '',
       payerUID: map['payerUID'] ?? '',
       parkingUID: map['parkingUID'] ?? '',
       vehicleType: VehicleType.values.firstWhere(
-        (VehicleType vehicleType) => vehicleType.name == map['vehicleType'],
+        (vehicleType) => vehicleType.name == map['vehicleType'],
+        orElse: () => VehicleType.none,
       ),
+      vehicle:
+          map['vehicle'] is Map<String, dynamic>
+              ? Vehicle.fromJson(map['vehicle'])
+              : Vehicle.empty(),
+      parked: map['parked'] ?? false,
+
       createAt:
           map['createAt'] is Timestamp
               ? (map['createAt'] as Timestamp).toDate()
@@ -39,18 +53,13 @@ class Ticket extends Equatable {
                   DateTime.now(),
     );
   }
+
   factory Ticket.fromRealtimeJson(Map<String, dynamic> map) {
-    return Ticket(
-      uid: map["uid"] ?? '',
-      value: map['value'] ?? 0.0,
-      description: map['description'] ?? '',
-      payerUID: map['payerUID'] ?? '',
-      parkingUID: map['parkingUID'] ?? '',
-      vehicleType: VehicleType.values.firstWhere(
-        (VehicleType vehicleType) => vehicleType.name == map['vehicleType'],
-      ),
-      createAt: (map['createAt'] as Timestamp).toDate(),
-    );
+    return Ticket.fromJson(map);
+  }
+
+  factory Ticket.fromMap(Map<String, dynamic> map) {
+    return Ticket.fromJson(map);
   }
 
   Map<String, dynamic> toJson() {
@@ -60,7 +69,9 @@ class Ticket extends Equatable {
       'description': description,
       'payerUID': payerUID,
       'parkingUID': parkingUID,
-      'vehicleType': vehicleType,
+      'vehicleType': vtype,
+      'vehicle': vehicle.toJson(),
+      'parked': parked,
       'createAt': createAt,
     };
   }
@@ -68,11 +79,13 @@ class Ticket extends Equatable {
   factory Ticket.empty() {
     return Ticket(
       uid: '',
-      value: 0,
+      value: 0.0,
       description: '',
       payerUID: '',
       parkingUID: '',
-      vehicleType: VehicleType.car,
+      vehicleType: VehicleType.none,
+      vehicle: Vehicle.empty(),
+      parked: false,
       createAt: DateTime.now(),
     );
   }
@@ -91,6 +104,8 @@ class Ticket extends Equatable {
     payerUID,
     parkingUID,
     vehicleType,
+    vehicle,
+    parked,
     createAt,
   ];
 }
