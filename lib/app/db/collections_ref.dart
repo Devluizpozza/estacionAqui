@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
+import 'package:estacionaqui/app/models/log_model.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/models/ticket_model.dart';
 
@@ -28,6 +29,17 @@ abstract class CollectionsRef {
         },
         toFirestore: (Parking parking, _) {
           return parking.toJson();
+        },
+      );
+
+  static CollectionReference<Log> get log => DB.firestoreInstance
+      .collection(Collections.log)
+      .withConverter<Log>(
+        fromFirestore: (snapshot, _) {
+          return Log.fromJson(snapshot.data()!);
+        },
+        toFirestore: (Log log, _) {
+          return log.toJson();
         },
       );
 

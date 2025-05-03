@@ -51,3 +51,7 @@ enum MotoMarkType {
 }
 
 enum VehicleType { none, car, motorcycle }
+
+enum StatusType { none, pending, active, desactive }
+
+enum ActionType {none, vehicle_exit, vehicle_entry, request_entry, request_accepted, request_refused}

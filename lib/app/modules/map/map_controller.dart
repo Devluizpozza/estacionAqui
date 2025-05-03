@@ -1,15 +1,18 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:estacionaqui/app/consts/enums.dart';
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
 import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/models/follower.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
+import 'package:estacionaqui/app/models/ticket_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/repositories/follower_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
+import 'package:estacionaqui/app/repositories/ticket_repository.dart';
 import 'package:estacionaqui/app/routes/app_routes.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
@@ -26,6 +29,7 @@ class MapToViewController extends GetxController {
   final ParkingRepository parkingRepository = ParkingRepository();
   final FollowerRepository followerRepository = FollowerRepository();
   final AppUserRepository userRepository = AppUserRepository();
+  final TicketRepository ticketRepository = TicketRepository();
   final RxMap<String, bool> followingStatus = <String, bool>{}.obs;
 
   String get userUID => UserController.instance.user!.uid;
@@ -52,6 +56,19 @@ class MapToViewController extends GetxController {
     await setMarker();
     super.onInit();
     isLoading = false;
+  }
+
+  Future<List<Ticket>> listTicketsByParking(String parkingUID) async {
+    try {
+      List<Ticket> tickets = await ticketRepository.list(parkingUID);
+      if (tickets.isNotEmpty) {
+        return tickets;
+      }
+      return [];
+    } catch (e) {
+      Logger.info(e.toString());
+      return [];
+    }
   }
 
   Future<void> detectLocation() async {
@@ -112,11 +129,19 @@ class MapToViewController extends GetxController {
     try {
       final List<Parking> remoteParkings = await parkingRepository.list();
       if (remoteParkings.isNotEmpty) {
-        for (Parking remotParking in remoteParkings) {
+        for (Parking remoteParking in remoteParkings) {
+          List<Ticket> ticketsByParking = await listTicketsByParking(
+            remoteParking.uid,
+          );
+          List<Ticket>? slotsOccupedToFilter =
+              ticketsByParking
+                  .where((ticket) => ticket.statusType == StatusType.active)
+                  .toList();
+          int slotsOccuped = slotsOccupedToFilter.length;
           Marker markerToSave = Marker(
             point: LatLng(
-              remotParking.place.geolocationPoint.latitude,
-              remotParking.place.geolocationPoint.longitude,
+              remoteParking.place.geolocationPoint.latitude,
+              remoteParking.place.geolocationPoint.longitude,
             ),
             width: 250, // adicione largura
             height: 100,
@@ -124,7 +149,7 @@ class MapToViewController extends GetxController {
               onTap: () {
                 BottomSheetHandler.showSimpleBottomSheet(
                   Get.context!,
-                  buildParkingBottomSheet(remotParking),
+                  buildParkingBottomSheet(remoteParking),
                   initialChildSize: 0.5,
                 );
               },
@@ -145,7 +170,7 @@ class MapToViewController extends GetxController {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              remotParking.displayName,
+                              remoteParking.displayName,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -166,7 +191,7 @@ class MapToViewController extends GetxController {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "2/${remotParking.slots}",
+                              "$slotsOccuped/${remoteParking.slots}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

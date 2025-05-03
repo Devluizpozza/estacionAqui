@@ -5,4 +5,5 @@ abstract class Collections {
   static const String follower = 'follower';
   static const String vehicle = 'vehicle';
   static const String ticket = 'ticket';
+  static const String log = 'log';
 }
