@@ -100,9 +100,13 @@ abstract class BottomSheetHandler {
     required BuildContext context,
     required String title,
     required String confirmText,
+    String? extraButtonText,
     required Color confirmColor,
+    Color? extraButtonColor,
     required VoidCallback onConfirm,
+    VoidCallback? onExtraButton,
     required VoidCallback onCancel,
+    bool shouldShowExtraButton = false,
     String cancelText = "Cancelar",
   }) {
     showModalBottomSheet(
@@ -159,6 +163,37 @@ abstract class BottomSheetHandler {
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: shouldShowExtraButton,
+                        child: SizedBox(height: 24),
+                      ),
+                      Visibility(
+                        visible: shouldShowExtraButton,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onExtraButton!();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: extraButtonColor,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 32,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          child: Text(
+                            extraButtonText ?? '',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

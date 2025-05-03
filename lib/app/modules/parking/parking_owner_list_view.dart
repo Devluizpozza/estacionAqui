@@ -90,7 +90,7 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
                                               arguments: {
                                                 "parkingName":
                                                     parking.displayName,
-                                                "parkingUID": parking.uid,
+                                                "parking": parking,
                                               },
                                             ),
                                       ),

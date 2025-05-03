@@ -33,17 +33,20 @@ class Vehicle extends Equatable {
   factory Vehicle.fromJson(Map<String, dynamic> map) {
     return Vehicle(
       uid: map["uid"] ?? '',
-      plate: map['plate'] ?? 0.0,
+      plate: map['plate'] ?? '',
       userUID: map['userUID'] ?? '',
       vehicleColor: map['vehicleColor'] ?? '',
       vehicleType: VehicleType.values.firstWhere(
-        (VehicleType vehicleType) => vehicleType.name == map['vehicleType'],
+        (vehicleType) => vehicleType.name == map['vehicleType'],
+        orElse: () => VehicleType.none,
       ),
       carMarkType: CarMarkType.values.firstWhere(
-        (CarMarkType carMarkType) => carMarkType.name == map['carMarkType'],
+        (carMarkType) => carMarkType.name == map['carMarkType'],
+        orElse: () => CarMarkType.none,
       ),
       motoMarkType: MotoMarkType.values.firstWhere(
-        (MotoMarkType motoMarkType) => motoMarkType.name == map['motoMarkType'],
+        (motoMarkType) => motoMarkType.name == map['motoMarkType'],
+        orElse: () => MotoMarkType.none,
       ),
       createAt:
           map['createAt'] is Timestamp

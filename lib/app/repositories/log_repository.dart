@@ -1,18 +1,14 @@
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/collections_ref.dart';
-import 'package:estacionaqui/app/models/ticket_model.dart';
+import 'package:estacionaqui/app/models/log_model.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 
-class TicketRepository {
-  TicketRepository();
+class LogRepository {
+  LogRepository();
 
-  Future<bool> create(String parkingUID, Ticket ticket) async {
+  Future<bool> create(Log log) async {
     try {
-      await CollectionsRef.parking
-          .doc(parkingUID)
-          .collection(Collections.ticket)
-          .doc(ticket.uid)
-          .set(ticket.toJson());
+      await CollectionsRef.log.doc(log.uid).set(log);
 
       return true;
     } catch (e) {
@@ -21,19 +17,9 @@ class TicketRepository {
     }
   }
 
-  Future<bool> remove(String parkingUID, String ticketUID) async {
+  Future<bool> remove(String logUID) async {
     try {
-      final querySnapshot =
-          await CollectionsRef.parking
-              .doc(parkingUID)
-              .collection(Collections.ticket)
-              .where('uid', isEqualTo: ticketUID)
-              .get();
-
-      for (final doc in querySnapshot.docs) {
-        await doc.reference.delete();
-      }
-
+      await CollectionsRef.log.doc(logUID).delete();
       return true;
     } catch (e) {
       Logger.info(e.toString());
@@ -59,15 +45,15 @@ class TicketRepository {
     }
   }
 
-  Future<List<Ticket>> list(String parkingUID) async {
+  Future<List<Log>> listByParking(String parkingUID) async {
     try {
       final query =
-          await CollectionsRef.parking
-              .doc(parkingUID)
-              .collection(Collections.ticket)
+          await CollectionsRef.log
+              .where("targetId", isEqualTo: parkingUID)
+              .orderBy("createdAt", descending: true)
               .get();
 
-      return query.docs.map((doc) => Ticket.fromJson(doc.data())).toList();
+      return query.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       Logger.info(e.toString());
       return [];

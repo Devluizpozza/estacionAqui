@@ -5,12 +5,14 @@ import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
 import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/app_user_model.dart';
 import 'package:estacionaqui/app/models/follower.dart';
+import 'package:estacionaqui/app/models/log_model.dart';
 import 'package:estacionaqui/app/models/parking_model.dart';
 import 'package:estacionaqui/app/models/ticket_model.dart';
 import 'package:estacionaqui/app/models/vehicle_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/app_user_repository.dart';
 import 'package:estacionaqui/app/repositories/follower_repository.dart';
+import 'package:estacionaqui/app/repositories/log_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
 import 'package:estacionaqui/app/repositories/ticket_repository.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
@@ -22,6 +24,8 @@ class ParkingDetailController extends GetxController {
   final AppUserRepository userRepository = AppUserRepository();
   final FollowerRepository followerRepository = FollowerRepository();
   final TicketRepository ticketRepository = TicketRepository();
+  final LogRepository logRepository = LogRepository();
+
   final RxMap<String, bool> followingStatus = <String, bool>{}.obs;
   final Vehicle vehicle = Vehicle(
     uid: DB.generateUID(Collections.vehicle),
@@ -74,11 +78,17 @@ class ParkingDetailController extends GetxController {
         parkingUID: parking.uid,
         vehicleType: VehicleType.car,
         vehicle: vehicle,
+        statusType: StatusType.pending,
         createAt: DateTime.now(),
       );
       bool success = await ticketRepository.create(parking.uid, ticketToSave);
       if (success) {
         SnackBarHandler.snackBarSuccess('$ticketToSave criado');
+        await createLog(
+          parking.uid,
+          ActionType.request_entry,
+          metaData: {"vehicle": vehicle.toJson(), "value": 15.0},
+        );
       }
     } catch (e) {
       Logger.info(e.toString());
@@ -149,5 +159,28 @@ class ParkingDetailController extends GetxController {
         await handleFollow();
       },
     );
+  }
+
+  Future<void> createLog(
+    String parkingUID,
+    ActionType actionType, {
+    Map<String, dynamic>? metaData,
+  }) async {
+    try {
+      Log logToSave = Log(
+        uid: DB.generateUID(Collections.log),
+        userUID: userUID,
+        targetId: parkingUID,
+        actionType: actionType,
+        createdAt: DateTime.now(),
+        metadata: metaData,
+      );
+      bool success = await logRepository.create(logToSave);
+      if (success) {
+        print(success);
+      }
+    } catch (e) {
+      Logger.info(e.toString());
+    }
   }
 }

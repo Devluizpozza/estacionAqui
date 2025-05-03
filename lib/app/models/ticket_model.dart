@@ -12,7 +12,7 @@ class Ticket extends Equatable {
   final String parkingUID;
   final VehicleType vehicleType;
   final Vehicle vehicle;
-  final bool parked;
+  final StatusType statusType;
   final DateTime createAt;
 
   const Ticket({
@@ -24,10 +24,12 @@ class Ticket extends Equatable {
     required this.vehicleType,
     required this.vehicle,
     required this.createAt,
-    this.parked = false,
+    this.statusType = StatusType.none,
   });
 
   String get vtype => vehicleType.name;
+  String get stype => statusType.name;
+  bool get parked => statusType == StatusType.active;
 
   factory Ticket.fromJson(Map<String, dynamic> map) {
     return Ticket(
@@ -44,8 +46,10 @@ class Ticket extends Equatable {
           map['vehicle'] is Map<String, dynamic>
               ? Vehicle.fromJson(map['vehicle'])
               : Vehicle.empty(),
-      parked: map['parked'] ?? false,
-
+      statusType: StatusType.values.firstWhere(
+        (statusType) => statusType.name == map['statusType'],
+        orElse: () => StatusType.none,
+      ),
       createAt:
           map['createAt'] is Timestamp
               ? (map['createAt'] as Timestamp).toDate()
@@ -71,7 +75,7 @@ class Ticket extends Equatable {
       'parkingUID': parkingUID,
       'vehicleType': vtype,
       'vehicle': vehicle.toJson(),
-      'parked': parked,
+      'statusType': stype,
       'createAt': createAt,
     };
   }
@@ -85,7 +89,7 @@ class Ticket extends Equatable {
       parkingUID: '',
       vehicleType: VehicleType.none,
       vehicle: Vehicle.empty(),
-      parked: false,
+      statusType: StatusType.none,
       createAt: DateTime.now(),
     );
   }
@@ -105,7 +109,7 @@ class Ticket extends Equatable {
     parkingUID,
     vehicleType,
     vehicle,
-    parked,
+    statusType,
     createAt,
   ];
 }
