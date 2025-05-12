@@ -6,6 +6,8 @@ import 'package:estacionaqui/app/components/slot_selector.dart';
 import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
 import 'package:estacionaqui/app/modules/parking/parking_add_controller.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
+import 'package:estacionaqui/app/utils/fomatter.dart';
+import 'package:estacionaqui/app/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -54,6 +56,9 @@ class ParkingAddView extends GetView<ParkingAddController> {
               InputText(
                 label: "(00) 00000-0000",
                 controller: controller.phoneController,
+                validator: Validator.phoneValidator,
+                keyboardType: TextInputType.number,
+                inputFormatters: [Formatter.phoneMask],
               ),
               // _buildField("Slots", controller.slotsController),
               const SizedBox(height: 5),

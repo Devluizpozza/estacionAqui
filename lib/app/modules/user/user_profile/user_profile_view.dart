@@ -2,6 +2,7 @@ import 'package:estacionaqui/app/components/loading_widget.dart';
 import 'package:estacionaqui/app/modules/user/user_profile/user_profile_controller.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:estacionaqui/app/utils/fomatter.dart';
+import 'package:estacionaqui/app/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,8 +25,12 @@ class UserProfileView extends GetView<UserProfileController> {
                               ? IconButton(
                                 icon: const Icon(Icons.save),
                                 onPressed: () {
-                                  controller.updateUserData();
-                                  controller.isEditing = false;
+                                  if (controller.formKey.currentState
+                                          ?.validate() ??
+                                      false) {
+                                    controller.updateUserData();
+                                    controller.isEditing = false;
+                                  }
                                 },
                               )
                               : IconButton(
@@ -108,20 +113,32 @@ class UserProfileView extends GetView<UserProfileController> {
                                       : null,
                             ),
                         const SizedBox(height: 20),
-                        _buildField(
-                          "Name",
-                          controller.nameController,
-                          controller.isEditing,
-                        ),
-                        _buildField(
-                          "Contato",
-                          controller.contatoController,
-                          false,
-                        ),
-                        _buildField(
-                          "Email",
-                          controller.emailController,
-                          controller.isEditing,
+                        Form(
+                          key: controller.formKey,
+                          autovalidateMode: AutovalidateMode.always,
+                          child: Column(
+                            children: [
+                              // Avatar...
+                              const SizedBox(height: 20),
+                              _buildField(
+                                "Name",
+                                controller.nameController,
+                                controller.isEditing,
+                              ),
+                              _buildField(
+                                "Contato",
+                                controller.contatoController,
+                                false,
+                              ),
+                              _buildField(
+                                "Email",
+                                controller.emailController,
+                                controller.isEditing,
+                                validator: Validator.emailValidator,
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -149,13 +166,17 @@ class UserProfileView extends GetView<UserProfileController> {
 Widget _buildField(
   String label,
   TextEditingController controller,
-  bool editing,
-) {
+  bool editing, {
+  String? Function(String?)? validator,
+  TextInputType keyboardType = TextInputType.text,
+}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 10),
-    child: TextField(
+    child: TextFormField(
       controller: controller,
       enabled: editing,
+      validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

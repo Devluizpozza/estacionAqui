@@ -75,7 +75,7 @@ class TicketCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 12),
                   ),
                   Text(
-                    "R\$ ${ticket.value.toStringAsFixed(2)}",
+                    "R\$ ${ticket.value}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,

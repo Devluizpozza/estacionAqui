@@ -23,16 +23,11 @@ class VehicleRepository {
 
   Future<bool> remove(String vehicleUID, String userUID) async {
     try {
-      final querySnapshot =
-          await CollectionsRef.appUser
-              .doc(userUID)
-              .collection(Collections.vehicle)
-              .where('userUID', isEqualTo: userUID)
-              .get();
-
-      for (final doc in querySnapshot.docs) {
-        await doc.reference.delete();
-      }
+      await CollectionsRef.appUser
+          .doc(userUID)
+          .collection(Collections.vehicle)
+          .doc(vehicleUID)
+          .delete();
       return true;
     } catch (e) {
       Logger.info(e.toString());

@@ -70,6 +70,11 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
                                   itemBuilder: (context, index) {
                                     final Parking parking =
                                         controller.parkings[index];
+                                    final int occupied =
+                                        controller.occupedSlotsMap[parking
+                                            .uid] ??
+                                        0;
+
                                     return Padding(
                                       padding: const EdgeInsets.only(
                                         bottom: 12,
@@ -82,8 +87,10 @@ class ParkingOwnerList extends GetView<ParkingOwnerListController> {
                                                   parking,
                                                 ),
                                         title: parking.displayName,
-                                        spots: "15/${parking.slots} vagas",
-                                        earnings: "R\$ 540,00 hoje",
+                                        spots:
+                                            "$occupied/${parking.slots} vagas",
+                                        earnings:
+                                            "R\$ ${controller.totalValue} hoje",
                                         onTap:
                                             () => Get.toNamed(
                                               AppRoutes.parking_financial,

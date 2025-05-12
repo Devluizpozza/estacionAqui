@@ -1,5 +1,6 @@
 import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputText extends StatelessWidget {
   final String label;
@@ -8,6 +9,9 @@ class InputText extends StatelessWidget {
   final IconData? suffixIcon;
   final bool showSuffixIcon;
   final bool enabled;
+  final String? Function(String?)? validator;
+  final TextInputType keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   const InputText({
     super.key,
@@ -17,14 +21,22 @@ class InputText extends StatelessWidget {
     this.showSuffixIcon = false,
     this.onPressedSuffixIcon,
     this.enabled = true,
+    this.validator,
+    this.keyboardType = TextInputType.text,
+    this.inputFormatters,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
+        enabled: enabled,
+        validator: validator,
+        keyboardType: keyboardType,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        inputFormatters: inputFormatters,
         decoration: InputDecoration(
           suffixIcon:
               showSuffixIcon
@@ -39,7 +51,6 @@ class InputText extends StatelessWidget {
           filled: true,
           fillColor: Colors.white,
         ),
-        enabled: enabled,
       ),
     );
   }
