@@ -6,6 +6,7 @@ class DropDownEnum<T> extends StatelessWidget {
   final Function(T?) onChanged;
   final List<T> values;
   final String Function(T) display;
+  final bool disabled;
 
   const DropDownEnum({
     super.key,
@@ -14,6 +15,7 @@ class DropDownEnum<T> extends StatelessWidget {
     required this.onChanged,
     required this.values,
     required this.display,
+    this.disabled = false,
   });
 
   @override
@@ -33,7 +35,7 @@ class DropDownEnum<T> extends StatelessWidget {
                         DropdownMenuItem<T>(value: e, child: Text(display(e))),
                   )
                   .toList(),
-          onChanged: onChanged,
+          onChanged: disabled ? null : onChanged,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey.shade100,

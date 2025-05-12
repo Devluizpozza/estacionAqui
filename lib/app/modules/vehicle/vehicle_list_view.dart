@@ -75,7 +75,15 @@ class VehicleListView extends GetView<VehicleListController> {
                                       padding: const EdgeInsets.only(
                                         bottom: 12,
                                       ),
-                                      child: VehicleCard(vehicle: vehicle),
+                                      child: GestureDetector(
+                                        onLongPress:
+                                            () => controller
+                                                .removeVehicleBottomSheet(
+                                                  context,
+                                                  vehicle.uid,
+                                                ),
+                                        child: VehicleCard(vehicle: vehicle),
+                                      ),
                                     );
                                   },
                                 ),

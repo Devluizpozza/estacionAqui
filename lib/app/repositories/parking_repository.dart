@@ -33,9 +33,12 @@ class ParkingRepository extends DB {
     }
   }
 
-  Future<bool> updateOnly(String uid, Map<String, dynamic> changes) async {
+  Future<bool> updateOnly(
+    String parkingUID,
+    Map<String, dynamic> changes,
+  ) async {
     try {
-      await CollectionsRef.parking.doc(uid).update(changes);
+      await CollectionsRef.parking.doc(parkingUID).update(changes);
       return true;
     } catch (e) {
       Logger.info(e);

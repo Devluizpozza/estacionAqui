@@ -23,15 +23,7 @@ class MapView extends GetView<MapToViewController> {
         visible: !controller.isLoading,
         replacement: LoadingWidget(),
         child: Scaffold(
-          appBar: AppBar(
-            title: Text('Mapa'),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.refresh_rounded, size: 20),
-                onPressed: () => controller.setMarker(),
-              ),
-            ],
-          ),
+          appBar: AppBar(title: Text('Mapa')),
           body: MapComponent(
             markers: controller.markers,
             onLocationSelected: _locationSelected,

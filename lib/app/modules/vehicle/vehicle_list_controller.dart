@@ -1,12 +1,11 @@
-import 'package:estacionaqui/app/consts/enums.dart';
-import 'package:estacionaqui/app/db/collections.dart';
-import 'package:estacionaqui/app/db/db.dart';
+import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
+import 'package:estacionaqui/app/handlers/snack_bar_handler.dart';
 import 'package:estacionaqui/app/models/vehicle_model.dart';
 import 'package:estacionaqui/app/modules/user/user_controller.dart';
 import 'package:estacionaqui/app/repositories/vehicle_repository.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class VehicleListController extends GetxController {
   final RxBool _isLoading = false.obs;
@@ -52,20 +51,24 @@ class VehicleListController extends GetxController {
     }
   }
 
-  Future<void> createVehicle() async {
+  void removeVehicleBottomSheet(BuildContext context, String vehicleUID) {
+    BottomSheetHandler.showConfirmationBottomSheet(
+      context: context,
+      title: "",
+      confirmColor: Colors.red,
+      confirmText: "Remover",
+      onCancel: () => Get.back(),
+      onConfirm: () => removeVehicle(vehicleUID),
+      cancelText: "Cancel",
+    );
+  }
+
+  Future<void> removeVehicle(String vehicleUID) async {
     try {
-      Vehicle vehicle = Vehicle(
-        uid: DB.generateUID(Collections.vehicle),
-        plate: "ACD7859",
-        userUID: userUID,
-        vehicleColor: "#ffffff",
-        vehicleType: VehicleType.car,
-        carMarkType: CarMarkType.bmw,
-        createAt: DateTime.now(),
-      );
-      bool success = await vehicleRepository.create(userUID, vehicle);
+      bool success = await vehicleRepository.remove(vehicleUID, userUID);
       if (success) {
-        await onRefresh();
+        await listVehicles();
+        SnackBarHandler.snackBarSuccess("Veículo removido");
       }
     } catch (e) {
       Logger.info(e.toString());

@@ -21,6 +21,7 @@ class UserProfileController extends GetxController {
   final contatoController = TextEditingController();
   final emailController = TextEditingController();
   final Rx<String> _imageUrl = ''.obs;
+  final formKey = GlobalKey<FormState>();
 
   bool get isEditing => _isEditing.value;
 
@@ -86,14 +87,7 @@ class UserProfileController extends GetxController {
         UserController.instance.user!.uid,
       );
       if (appUser.uid.isNotEmpty) {
-        user = AppUser(
-          uid: appUser.uid,
-          name: appUser.name,
-          contato: appUser.contato,
-          email: appUser.email,
-          imageUrl: appUser.imageUrl,
-          createAt: appUser.createAt,
-        );
+        user = appUser;
         populateTextFields();
         isLoading = false;
       }

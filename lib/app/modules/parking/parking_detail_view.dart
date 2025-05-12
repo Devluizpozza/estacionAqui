@@ -172,7 +172,8 @@ class ParkingDetailView extends GetView<ParkingDetailController> {
                       ),
                       const SizedBox(height: 50),
                       ElevatedButton(
-                        onPressed: () => controller.createTicket(),
+                        onPressed:
+                            () => controller.selectVehicleBottomSheet(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.solarYellow,
                           padding: const EdgeInsets.symmetric(

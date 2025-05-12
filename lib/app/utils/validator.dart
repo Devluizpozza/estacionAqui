@@ -11,16 +11,25 @@ abstract class Validator {
     return null;
   };
 
-  static FormFieldValidator<String> emailValidator = (value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Email obrigatório';
-    }
-    final emailRegex = RegExp(
-      r"^[a-zA-Z0-9._%-]+@(gmail\.com|hotmail\.com|outlook\.com|yahoo\.com|live\.com|icloud\.com|protonmail\.com|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$",
-    );
-    if (!emailRegex.hasMatch(value)) {
-      return 'Email inválido';
-    }
+  static FormFieldValidator<String> emailValidator = (String? value) {
+    if (value == null || value.isEmpty) return 'O campo é obrigatório';
+    final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
+    if (!emailRegex.hasMatch(value)) return 'E-mail inválido';
     return null;
   };
+
+  static String? phoneValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'O campo é obrigatório';
+    }
+    final numbersOnly = value.replaceAll(RegExp(r'\D'), '');
+    if (numbersOnly.length != 11) {
+      return 'Telefone deve conter DDD + número com 9 dígitos';
+    }
+    if (!numbersOnly.substring(2).startsWith('9')) {
+      return 'Número deve começar com 9 após o DDD';
+    }
+
+    return null;
+  }
 }

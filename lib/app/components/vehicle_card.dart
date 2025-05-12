@@ -31,7 +31,7 @@ class VehicleCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: _parseColor(
                   vehicle.vehicleColor,
-                ), // mockado por enquanto
+                ), 
               ),
             ),
             const SizedBox(width: 16),

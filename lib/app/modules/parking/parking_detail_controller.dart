@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:estacionaqui/app/components/drop_down_vehicle.dart';
 import 'package:estacionaqui/app/consts/enums.dart';
 import 'package:estacionaqui/app/db/collections.dart';
 import 'package:estacionaqui/app/db/db.dart';
@@ -15,6 +18,8 @@ import 'package:estacionaqui/app/repositories/follower_repository.dart';
 import 'package:estacionaqui/app/repositories/log_repository.dart';
 import 'package:estacionaqui/app/repositories/parking_repository.dart';
 import 'package:estacionaqui/app/repositories/ticket_repository.dart';
+import 'package:estacionaqui/app/repositories/vehicle_repository.dart';
+import 'package:estacionaqui/app/utils/app_colors.dart';
 import 'package:estacionaqui/app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,20 +30,14 @@ class ParkingDetailController extends GetxController {
   final FollowerRepository followerRepository = FollowerRepository();
   final TicketRepository ticketRepository = TicketRepository();
   final LogRepository logRepository = LogRepository();
-
+  final VehicleRepository vehicleRepository = VehicleRepository();
   final RxMap<String, bool> followingStatus = <String, bool>{}.obs;
-  final Vehicle vehicle = Vehicle(
-    uid: DB.generateUID(Collections.vehicle),
-    userUID: "plne9b7A6mS2qmCjrmisyvytvg03",
-    plate: "CDF2222",
-    vehicleColor: "#ffffff",
-    vehicleType: VehicleType.car,
-    carMarkType: CarMarkType.audi,
-    createAt: DateTime.now(),
-  );
+  final Rx<Vehicle> _vehicle = Rx<Vehicle>(Vehicle.empty());
   late Parking parking;
   final RxBool _isFollowing = false.obs;
   final RxBool _isLoading = false.obs;
+  final Rx<List<Vehicle>> _vehicles = Rx<List<Vehicle>>(<Vehicle>[]);
+  final Rx<Vehicle?> _selectedVehicle = Rx<Vehicle?>(null);
 
   @override
   void onInit() async {
@@ -68,31 +67,98 @@ class ParkingDetailController extends GetxController {
     _isLoading.refresh();
   }
 
+  List<Vehicle> get vehicles => _vehicles.value;
+
+  set vehicles(List<Vehicle> value) {
+    _vehicles.value = value;
+    _vehicles.refresh();
+  }
+
+  Vehicle? get selectedVehicle => _selectedVehicle.value;
+
+  set selectedVehicle(Vehicle? value) {
+    _selectedVehicle.value = value;
+    _selectedVehicle.refresh();
+  }
+
+  Vehicle get vehicle => _vehicle.value;
+
+  set vehicle(Vehicle value) {
+    _vehicle.value = value;
+    _vehicle.refresh();
+  }
+
   Future<void> createTicket() async {
     try {
       Ticket ticketToSave = Ticket(
         uid: DB.generateUID(Collections.ticket),
         payerUID: userUID,
         description: "pagamento de entrada",
-        value: 15.0,
+        value: 0.0,
         parkingUID: parking.uid,
-        vehicleType: VehicleType.car,
-        vehicle: vehicle,
+        vehicleType: selectedVehicle!.vehicleType,
+        vehicle: selectedVehicle!,
         statusType: StatusType.pending,
         createAt: DateTime.now(),
       );
       bool success = await ticketRepository.create(parking.uid, ticketToSave);
       if (success) {
+        Get.back();
         SnackBarHandler.snackBarSuccess('$ticketToSave criado');
         await createLog(
           parking.uid,
           ActionType.request_entry,
-          metaData: {"vehicle": vehicle.toJson(), "value": 15.0},
+          metaData: {
+            "vehicle": selectedVehicle!.toJson(),
+            "value": ticketToSave.value,
+          },
         );
       }
     } catch (e) {
       Logger.info(e.toString());
     }
+  }
+
+  Future<void> selectVehicleBottomSheet(BuildContext context) async {
+    await listVehicles();
+    selectedVehicle = null;
+    return BottomSheetHandler.showSimpleBottomSheet(
+      context,
+      initialChildSize: 0.5,
+      Padding(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 10,
+            children: [
+              const SizedBox(height: 20),
+              Obx(
+                () => DropDownVehicle(
+                  vehicles: vehicles,
+                  onSelected: (vehicle) => selectedVehicle = vehicle,
+                  selectedVehicle: selectedVehicle,
+                  shouldShowVehicleCard: selectedVehicle != null,
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => createTicket(),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      AppColors.lightBlue,
+                    ),
+                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                  ),
+                  child: Text("selecionar"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> listTickets() async {
@@ -175,10 +241,15 @@ class ParkingDetailController extends GetxController {
         createdAt: DateTime.now(),
         metadata: metaData,
       );
-      bool success = await logRepository.create(logToSave);
-      if (success) {
-        print(success);
-      }
+      await logRepository.create(logToSave);
+    } catch (e) {
+      Logger.info(e.toString());
+    }
+  }
+
+  Future<void> listVehicles() async {
+    try {
+      vehicles = await vehicleRepository.list(userUID);
     } catch (e) {
       Logger.info(e.toString());
     }

@@ -13,6 +13,7 @@ class Ticket extends Equatable {
   final VehicleType vehicleType;
   final Vehicle vehicle;
   final StatusType statusType;
+  final bool payed;
   final DateTime createAt;
 
   const Ticket({
@@ -25,6 +26,7 @@ class Ticket extends Equatable {
     required this.vehicle,
     required this.createAt,
     this.statusType = StatusType.none,
+    this.payed = false,
   });
 
   String get vtype => vehicleType.name;
@@ -50,6 +52,7 @@ class Ticket extends Equatable {
         (statusType) => statusType.name == map['statusType'],
         orElse: () => StatusType.none,
       ),
+      payed: map['payed'] ?? false,
       createAt:
           map['createAt'] is Timestamp
               ? (map['createAt'] as Timestamp).toDate()
@@ -76,6 +79,7 @@ class Ticket extends Equatable {
       'vehicleType': vtype,
       'vehicle': vehicle.toJson(),
       'statusType': stype,
+      'payed': payed,
       'createAt': createAt,
     };
   }
@@ -90,6 +94,7 @@ class Ticket extends Equatable {
       vehicleType: VehicleType.none,
       vehicle: Vehicle.empty(),
       statusType: StatusType.none,
+      payed: false,
       createAt: DateTime.now(),
     );
   }
@@ -110,6 +115,7 @@ class Ticket extends Equatable {
     vehicleType,
     vehicle,
     statusType,
+    payed,
     createAt,
   ];
 }

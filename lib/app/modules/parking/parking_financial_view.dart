@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:estacionaqui/app/components/ticket_card.dart';
 import 'package:estacionaqui/app/consts/enums.dart';
 import 'package:estacionaqui/app/handlers/bottom_sheet_handler.dart';
@@ -29,6 +31,11 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.house),
+              title: Text('Inicio'),
+              onTap: () => Get.toNamed(AppRoutes.home),
+            ),
+            ListTile(
               leading: Icon(Icons.car_repair),
               title: Text('Estacionamentos'),
               onTap: () => Get.toNamed(AppRoutes.parking_owner_list),
@@ -38,15 +45,12 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
               title: Text('veiculos'),
               onTap: () => Get.toNamed(AppRoutes.vehicle_list),
             ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Configurações'),
-            ),
             ListTile(leading: Icon(Icons.help), title: Text('Ajuda')),
           ],
         ),
       ),
       appBar: AppBar(
+        titleSpacing: 10,
         automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -62,36 +66,9 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blueGrey,
-                    radius: 18,
-                    child: Icon(
-                      Icons.notifications,
-                      color: AppColors.lightBlue,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: -1,
-                  right: 0,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.amberAccent,
-                    radius: 8,
-                    child: Text(
-                      "7",
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            child: IconButton(
+              icon: Icon(Icons.settings, size: 28),
+              onPressed: () => controller.updateParkingBottomSheet(context),
             ),
           ),
         ],
@@ -106,16 +83,16 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-
-            // Cards de valores
             Row(
               children: [
-                Expanded(
-                  child: _buildStatCard(
-                    title: "Lucro Hoje",
-                    value: "R\$ 320,00",
-                    icon: Icons.attach_money,
-                    color: Colors.green,
+                Obx(
+                  () => Expanded(
+                    child: _buildStatCard(
+                      title: "Lucro Hoje",
+                      value: "R\$ ${controller.totalValue}",
+                      icon: Icons.attach_money,
+                      color: Colors.green,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -159,7 +136,7 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
                               : Icons.motorcycle,
                         ),
                         title: Text(
-                          "Carro ${vehicle.plate} ${handleActionTypeName(log.actionType)}",
+                          "${vehicle.vehicleType == VehicleType.car ? "Carro" : "Moto"} ${vehicle.plate} ${handleActionTypeName(log.actionType)}",
                         ),
                         subtitle: Text(
                           DateFormat('dd/MM HH:mm').format(log.createdAt),
@@ -202,7 +179,6 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
           child: Row(
             children: [
               CircleAvatar(
-                // ignore: deprecated_member_use
                 backgroundColor: color.withOpacity(0.1),
                 child: Icon(icon, color: color),
               ),
@@ -384,7 +360,23 @@ class ParkingFinancialView extends GetView<ParkingFinancialController> {
               "description": "entrou",
               "statusType": StatusType.active.name,
             }, false);
-            controller.createLog(ActionType.request_accepted, vehicle);
+            controller.createLog(
+              ActionType.request_accepted,
+              vehicle,
+              metaData: {
+                "value":
+                    ticket.vehicleType == VehicleType.car
+                        ? controller.parking.carValue
+                        : controller.parking.motoValue,
+                "vehicle": vehicle.toJson(),
+              },
+            );
+            controller.updateTicket(ticket.uid, {
+              "value":
+                  ticket.vehicleType == VehicleType.car
+                      ? controller.parking.carValue
+                      : controller.parking.motoValue,
+            });
           },
           onExtraButton: () {
             controller.removeTicket(ticket.uid);

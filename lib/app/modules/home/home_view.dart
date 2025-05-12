@@ -37,8 +37,8 @@ class HomeView extends GetView<HomeController> {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Configurações'),
+              onTap: () => Get.toNamed(AppRoutes.user_profile),
             ),
-            ListTile(leading: Icon(Icons.help), title: Text('Ajuda')),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Sair'),
