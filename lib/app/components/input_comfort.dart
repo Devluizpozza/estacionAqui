@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class InputComfort extends StatefulWidget {
   final List<String> comforts;
   final void Function(String) onChanged;
+  final InputDecoration? inputDecoration;
 
   const InputComfort({
     super.key,
     required this.comforts,
     required this.onChanged,
+    this.inputDecoration,
   });
 
   @override
@@ -46,19 +48,21 @@ class _InputComfortState extends State<InputComfort> {
           child: TextField(
             controller: _textController,
             onSubmitted: (_) => _addComfort(),
-            decoration: InputDecoration(
-              labelText: "Adicionar comodidade",
-              labelStyle: TextStyle(color: Colors.blueGrey[200]),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              suffixIcon: IconButton(
-                icon: Icon(Icons.send, color: AppColors.lightBlue),
-                onPressed: _addComfort,
-              ),
-            ),
+            decoration:
+                widget.inputDecoration ??
+                InputDecoration(
+                  labelText: "Adicionar comodidade",
+                  labelStyle: TextStyle(color: Colors.blueGrey[200]),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.send, color: AppColors.lightBlue),
+                    onPressed: _addComfort,
+                  ),
+                ),
           ),
         ),
         const SizedBox(height: 6),

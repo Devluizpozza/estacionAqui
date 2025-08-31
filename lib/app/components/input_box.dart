@@ -4,12 +4,14 @@ class InputBox extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final int maxLines;
+  final InputDecoration? inputDecoration;
 
   const InputBox({
     super.key,
     required this.label,
     required this.controller,
     this.maxLines = 5,
+    this.inputDecoration,
   });
 
   @override
@@ -19,14 +21,18 @@ class InputBox extends StatelessWidget {
       child: TextField(
         controller: controller,
         maxLines: maxLines,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.blueGrey[200]),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: true,
-          fillColor: Colors.white,
-          alignLabelWithHint: true,
-        ),
+        decoration:
+            inputDecoration ??
+            InputDecoration(
+              labelText: label,
+              labelStyle: TextStyle(color: Colors.blueGrey[200]),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              alignLabelWithHint: true,
+            ),
       ),
     );
   }

@@ -19,11 +19,21 @@ class ParkingAddView extends GetView<ParkingAddController> {
     return Scaffold(
       appBar: AppBar(title: const Text("Criar estacionamento")),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(
+          right: 23,
+          left: 23,
+          top: 15,
+          bottom: 60,
+        ),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                child: Text("Localização"),
+              ),
               Obx(
                 () => InputText(
                   label:
@@ -45,15 +55,29 @@ class ParkingAddView extends GetView<ParkingAddController> {
                       ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                child: Text("Nome do estacionamento"),
+              ),
               InputText(
+                inputDecoration: inputDecoration,
                 label: "DisplayName",
                 controller: controller.displayNameController,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                child: Text("Descrição"),
               ),
               InputBox(
                 label: "Description",
                 controller: controller.descriptionController,
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                child: Text("Contato"),
+              ),
               InputText(
+                inputDecoration: inputDecoration,
                 label: "(00) 00000-0000",
                 controller: controller.phoneController,
                 validator: Validator.phoneValidator,
@@ -82,7 +106,10 @@ class ParkingAddView extends GetView<ParkingAddController> {
                 ],
               ),
               const SizedBox(height: 10),
-
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                child: Text(""),
+              ),
               InputComfort(
                 comforts: controller.comforts,
                 onChanged: (newComfort) {
@@ -106,4 +133,11 @@ class ParkingAddView extends GetView<ParkingAddController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
+
+  InputDecoration get inputDecoration => InputDecoration(
+    filled: true,
+    fillColor: Colors.grey.shade100,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+  );
 }

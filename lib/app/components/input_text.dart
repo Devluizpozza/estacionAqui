@@ -12,6 +12,7 @@ class InputText extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final InputDecoration? inputDecoration;
 
   const InputText({
     super.key,
@@ -24,6 +25,7 @@ class InputText extends StatelessWidget {
     this.validator,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
+    this.inputDecoration,
   });
 
   @override
@@ -37,20 +39,24 @@ class InputText extends StatelessWidget {
         keyboardType: keyboardType,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         inputFormatters: inputFormatters,
-        decoration: InputDecoration(
-          suffixIcon:
-              showSuffixIcon
-                  ? IconButton(
-                    icon: Icon(suffixIcon, color: AppColors.lightBlue),
-                    onPressed: onPressedSuffixIcon,
-                  )
-                  : null,
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.blueGrey[200]),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          filled: true,
-          fillColor: Colors.white,
-        ),
+        decoration:
+            inputDecoration ??
+            InputDecoration(
+              suffixIcon:
+                  showSuffixIcon
+                      ? IconButton(
+                        icon: Icon(suffixIcon, color: AppColors.lightBlue),
+                        onPressed: onPressedSuffixIcon,
+                      )
+                      : null,
+              labelText: label,
+              labelStyle: TextStyle(color: Colors.blueGrey[200]),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              filled: true,
+              fillColor: Colors.white,
+            ),
       ),
     );
   }

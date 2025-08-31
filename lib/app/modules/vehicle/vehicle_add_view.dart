@@ -1,4 +1,5 @@
 import 'package:estacionaqui/app/components/drop_down_enum.dart';
+import 'package:estacionaqui/app/components/input_text.dart';
 import 'package:estacionaqui/app/consts/enums.dart';
 import 'package:estacionaqui/app/modules/vehicle/vehicle_add_controller.dart';
 import 'package:estacionaqui/app/utils/app_colors.dart';
@@ -42,9 +43,10 @@ class VehicleAddView extends GetView<VehicleAddController> {
                 const SizedBox(height: 10),
                 Text("Placa", style: labelStyle),
                 const SizedBox(height: 5),
-                TextField(
+                InputText(
                   controller: controller.plateController,
-                  decoration: inputDecoration,
+                  label: "",
+                  inputDecoration: inputDecoration,
                 ),
                 const SizedBox(height: 20),
                 DropDownEnum<VehicleType>(

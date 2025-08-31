@@ -10,23 +10,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VehicleAddController extends GetxController {
-  final Rx<VehicleType> _vehicleTypeSelected = Rx<VehicleType>(
-    VehicleType.none,
-  );
+  final Rx<VehicleType> _vehicleTypeSelected = Rx<VehicleType>(VehicleType.car);
   final Rx<CarMarkType> _carMarkTypeSelected = Rx<CarMarkType>(
-    CarMarkType.none,
+    CarMarkType.chevrolet,
   );
   final Rx<MotoMarkType> _motoMarkTypeSelected = Rx<MotoMarkType>(
-    MotoMarkType.none,
+    MotoMarkType.yamaha,
   );
   final Rx<String> _vehicleColorSelected = Rx<String>("");
   final VehicleRepository vehicleRepository = VehicleRepository();
   final Rx<Vehicle> _vehicle = Rx<Vehicle>(Vehicle.empty());
   final TextEditingController plateController = TextEditingController();
 
-  List<VehicleType> get vehicleTypeToOption => VehicleType.values;
-  List<CarMarkType> get carMarkTypeToOption => CarMarkType.values;
-  List<MotoMarkType> get motoMarkTypeOption => MotoMarkType.values;
+  List<VehicleType> get vehicleTypeToOption =>
+      VehicleType.values.where((vtype) => vtype != VehicleType.none).toList();
+  List<CarMarkType> get carMarkTypeToOption =>
+      CarMarkType.values.where((ctype) => ctype != CarMarkType.none).toList();
+  List<MotoMarkType> get motoMarkTypeOption =>
+      MotoMarkType.values.where((mtype) => mtype != MotoMarkType.none).toList();
 
   String get userUID => UserController.instance.user!.uid;
 
